@@ -1,4 +1,5 @@
 import React from "react";
+import { Column } from "../Layout/columns";
 export default function FormInput({
   className = "",
   minLength = undefined,
@@ -15,13 +16,12 @@ export default function FormInput({
   ...props
 }) {
   return (
-    <>
+    <Column>
       {title && (
         <>
           <label className="font-semibold tracking-wider" htmlFor={id}>
             {title} {required ? <></> : <span className="font-normal text-sm">(facultatif)</span>}
           </label>
-          <br />
         </>
       )}
       <input
@@ -38,6 +38,6 @@ export default function FormInput({
         value={value}
         onChange={setValue}
       />
-    </>
+    </Column>
   );
 }
