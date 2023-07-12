@@ -27,7 +27,7 @@ export default function FormTextarea({
         maxLength={maxLength}
         required={required}
         className={
-          "border border-gray-50 w-full bg-transparent px-4 py-2 rounded-lg m-1 focus:outline-0 focus:ring-1" +
+          "border border-text-color w-full bg-transparent px-4 py-2 rounded-lg focus:outline-0 focus:ring-1" +
           className
         }
         rows={rows}
