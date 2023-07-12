@@ -69,3 +69,36 @@ For the appropiates color scheme it's necessary to extend the colors in the tail
           on: "#fff",
         },
       },
+
+
+include in the index.css file
+
+@layer components {
+  /* Required by Prefabs folder ---- */
+  .btn {
+    @apply font-semibold transition-all duration-75 ease-in-out flex w-fit items-center space-x-2 rounded-lg cursor-pointer focus:ring-0 px-6 py-2 disabled:pointer-events-none disabled:opacity-70;
+  }
+  .icon-btn {
+    @apply rounded-full transition-all duration-75 ease-in-out cursor-pointer focus:ring-0 p-2 disabled:pointer-events-none disabled:opacity-70;
+  }
+  .card {
+    @apply relative rounded-xl p-5;
+  }
+
+  /* Personalized ---- */
+  .primary-gradient-to-bottom-right {
+    @apply bg-gradient-to-br from-primary-color to-primary-dark;
+  }
+  .secondary-gradient-to-bottom-right {
+    @apply bg-gradient-to-br from-secondary-color to-secondary-dark;
+  }
+  .danger-btn {
+    @apply font-semibold flex items-center space-x-1 rounded-lg bg-error-color text-error-on py-2 dark:bg-error-light dark:text-error-dark cursor-pointer focus:ring-0 px-6;
+  }
+  .danger-btn-outlined {
+    @apply font-semibold rounded-lg border border-error-color flex items-center space-x-1 bg-transparent hover:bg-error-color hover:bg-opacity-20 py-2 text-current cursor-pointer focus:ring-0 px-6;
+  }
+  .icon-btn-outlined {
+    @apply rounded-full border hover:bg-background-dark hover:bg-opacity-20 p-2 cursor-pointer focus:ring-0;
+  }
+}
