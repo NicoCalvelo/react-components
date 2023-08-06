@@ -10,7 +10,7 @@ export function GridCols4({ className = "", ...props }) {
 
 export function GridCols3({ className = "", ...props }) {
   return (
-    <div {...props} className={"grid md:grid-cols-2 xl:grid-cols-3 gap-2 2xl:gap-5 " + className}>
+    <div {...props} className={"grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-2 2xl:gap-5 " + className}>
       {props.children}
     </div>
   );

@@ -3,6 +3,7 @@ import { Dialog, Transition } from "@headlessui/react";
 import Spinner from "../Components/Spinner";
 import OutlinedButton from "../Buttons/OutlinedButton";
 import FilledButton from "../Buttons/FilledButton";
+import IconButton from "../Buttons/IconButton";
 
 export default function GenericModal({
   title,
@@ -14,6 +15,7 @@ export default function GenericModal({
   showActionButton = true,
   textActionButton = "Enregistrer",
   onActtionButton,
+  actionButtonType = "button",
   errorMessgae = null,
   ...props
 }) {
@@ -44,12 +46,24 @@ export default function GenericModal({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <Dialog.Panel className="relative mx-auto max-h-screen h-5/6 flex flex-col transform bg-background-dark overflow-hidden rounded-xl shadow-xl transition-all sm:mt-10 sm:mb-4 sm:w-full sm:max-w-4xl">
+            <Dialog.Panel className="relative mx-auto max-h-screen h-fit flex flex-col transform bg-background-dark overflow-hidden rounded-xl shadow-xl transition-all sm:mt-10 sm:mb-4 sm:w-full sm:max-w-4xl">
               {showHeader && (
-                <div className="bg-background-color border-b flex-grow">
-                  <Dialog.Title as="h3" className=" p-4">
+                <div className="bg-background-color border-b flex items-center flex-grow">
+                  <Dialog.Title as="h3" className="p-4 text-text-color">
                     {title}
                   </Dialog.Title>
+                  <IconButton className="sm:hidden ml-auto mr-2" onClick={() => setOpen(false)}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      fill="none"
+                      viewBox="0 0 24 24"
+                      strokeWidth={1.5}
+                      stroke="currentColor"
+                      className="w-6 h-6"
+                    >
+                      <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
+                    </svg>
+                  </IconButton>
                 </div>
               )}
               {loading && (
@@ -59,13 +73,17 @@ export default function GenericModal({
               )}
               {!loading && props.children}
               {showFooter && (
-                <div className="bg-background-color border-t px-4 py-3 sm:flex sm:justify-end sm:px-6 space-y-2 sm:space-y-0 sm:space-x-2">
+                <div className="bg-background-color border-t px-4 py-3 flex justify-end sm:px-6 space-x-2">
                   {errorMessgae && <p className="text-red-500 text-sm mr-auto my-auto">{errorMessgae}</p>}
-                  <OutlinedButton onClick={() => setOpen(false)} reference={cancelButtonRef}>
+                  <OutlinedButton
+                    className="hidden sm:block"
+                    onClick={() => setOpen(false)}
+                    reference={cancelButtonRef}
+                  >
                     Fermer
                   </OutlinedButton>
                   {showActionButton && (
-                    <FilledButton disable={loading} onClick={onActtionButton}>
+                    <FilledButton disable={loading} type={actionButtonType} onClick={onActtionButton}>
                       {textActionButton}
                     </FilledButton>
                   )}

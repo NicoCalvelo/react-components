@@ -9,7 +9,7 @@ export default function OutlinedButton({ className = "", hasIcon = false, type =
       type={type}
       {...props}
       className={
-        "btn border bg-primary-dark dark:bg-primary-light bg-opacity-0 hover:bg-opacity-10 " + (hasIcon && " pl-4 ") + " " + className
+        "btn border border-primary-color bg-primary-dark dark:bg-primary-light bg-opacity-0 hover:bg-opacity-10 " + (hasIcon && " pl-4 ") + " " + className
       }
     >
       {props.children}

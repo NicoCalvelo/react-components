@@ -34,7 +34,7 @@ export function ExpandedColumn({ id = "", className = "", ...props }) {
 
 export function ColRow({ className = "", breakPoint = "lg", ...props }) {
   return (
-    <div {...props} className={"flex flex-col lg:flex-row " + className}>
+    <div {...props} className={"flex flex-col " + breakPoint + ":flex-row " + className}>
       {props.children}
     </div>
   );

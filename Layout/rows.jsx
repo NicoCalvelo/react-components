@@ -23,6 +23,6 @@ export function RowEnd({ className = "", ...props }) {
 }
 
 export function RowCol({ className = "", ...props }) {
-  let css = "flex flex-row lg:flex-row";
+  let css = "flex flex-row lg:flex-col";
   return <div {...props} className={css + " " + className}>{props.children}</div>;
 }

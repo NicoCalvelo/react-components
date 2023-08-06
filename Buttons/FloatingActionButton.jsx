@@ -2,7 +2,7 @@ import React from "react";
 
 export default function FloatingActionButton({ className = "", tooltip, type = "button", onClick, ...props }) {
   return (
-    <div className={"group fixed right-4 bottom-4 " + className}>
+    <div className={"group fixed z-20 right-4 bottom-4 " + className}>
       <button
         onClick={onClick}
         type={type}
