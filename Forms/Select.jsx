@@ -11,16 +11,24 @@ import { Listbox, Transition } from "@headlessui/react";
     ];
 */
 
-export default function Select({ items, defaultValue, isMulti = false, placeholder = "Select an option...", isNullable = true, onChange, buttonClassName }) {
+export default function Select({
+  items,
+  defaultValue,
+  isMulti = false,
+  placeholder = "Select an option...",
+  isNullable = true,
+  onChange,
+  buttonClassName = "",
+}) {
   const [selected, setSelected] = useState(
     isMulti
       ? defaultValue
-        ? items.filter((e) => defaultValue.find((i) => i.id == e.id) !== undefined)
+        ? items.filter((e) => defaultValue.find((i) => (i.value ?? i.id) == (e.value ?? e.id)) !== undefined)
         : isNullable
         ? []
         : [items[0]]
       : defaultValue
-      ? items.find((e) => e.value === defaultValue)
+      ? items.find((e) => (e.value ?? e.id) === defaultValue)
       : isNullable
       ? null
       : items[0]
@@ -36,14 +44,9 @@ export default function Select({ items, defaultValue, isMulti = false, placehold
       multiple={isMulti}
     >
       <div className="relative">
-        <Listbox.Button
-          as="div"
-          className={
-            buttonClassName !== undefined ? buttonClassName : "flex items-center whitespace-nowrap w-36 max-w-xs space-x-6 py-2 px-4 rounded-lg border"
-          }
-        >
+        <Listbox.Button as="div" className={buttonClassName + " flex items-center whitespace-nowrap w-fit max-w-xs space-x-6 py-2 px-4 rounded-lg border"}>
           {selected && (!isMulti || (isMulti && selected.length > 0)) && (
-            <p className="truncate flex-grow">{isMulti ? selected.map((item) => item.label ?? item.name).join(", ") : selected.label ?? selected.name}</p>
+            <p className="truncate">{isMulti ? selected.map((item) => item.label ?? item.name).join(", ") : selected.label ?? selected.name}</p>
           )}
           {(!selected || (isMulti && selected.length === 0)) && <p className="text-text-light font-light">{placeholder}</p>}
           {isNullable && ((!isMulti && selected) || (isMulti && selected.length > 0)) && (
