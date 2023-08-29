@@ -1,5 +1,13 @@
 import React, { useState, useEffect } from "react";
-import { awaitForSeconds } from "../../helpers/functions";
+
+// Permet d'attendre quelques secondes avant de continuer
+export function awaitForSeconds(seconds) {
+  return new Promise((resolve, reject) => {
+    setTimeout(() => {
+      resolve();
+    }, seconds * 1000);
+  });
+}
 
 export function Toasts({}) {
   const [toast, setT] = useState(null);

@@ -1,14 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import OutlinedButton from "../Buttons/OutlinedButton";
-import { ErrorFilledButton } from "../Buttons/FilledButton";
 import { RowEnd } from "../Layout/rows";
-
-const confirmationTypes = {
-  info: "",
-  warning: "",
-  danger: "",
-};
 
 export default function ConfirmationModal({}) {
   const [open, setOpen] = useState(false);
