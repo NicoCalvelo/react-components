@@ -31,7 +31,7 @@ export default function FormInput({
         defaultValue={defaultValue}
         maxLength={maxLength}
         pattern={pattern}
-        className={"bg-transparent border-text-color placeholder:text-gray-400 border px-4 py-2 rounded-lg focus:outline-0 focus:ring-1 " + className}
+        className={"bg-transparent border-text-color placeholder:text-test-light border px-4 py-2 rounded-lg focus:outline-0 focus:ring-1 " + className}
         type={type}
         required={required}
         placeholder={placeholder}
