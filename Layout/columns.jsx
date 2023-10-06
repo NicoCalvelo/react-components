@@ -10,7 +10,7 @@ export function Column({ className = "", id = undefined, ...props }) {
 
 export function ColumnCenter({ className = "", id = undefined, ...props }) {
   return (
-    <div {...props} id={id} className={"flex flex-col h-full justify-center items-center " + " " + className}>
+    <div {...props} id={id} className={"flex flex-col justify-center items-center " + " " + className}>
       {props.children}
     </div>
   );
@@ -24,9 +24,9 @@ export function ColumnEnd({ className = "", id = undefined, ...props }) {
   );
 }
 
-export function ExpandedColumn({ id = "", className = "", ...props }) {
+export function ColumnBetween({ id = "", className = "", ...props }) {
   return (
-    <div {...props} id={id} className={"flex flex-col h-full " + className}>
+    <div {...props} id={id} className={"flex flex-col h-full justify-between " + className}>
       {props.children}
     </div>
   );

@@ -6,7 +6,7 @@ export default function Form({ className = "", id, onSubmit, ...props }) {
       className={"" + className}
       onSubmit={(e) => {
         e.preventDefault();
-        onSubmit();
+        onSubmit(e);
       }}
     >
       {props.children}

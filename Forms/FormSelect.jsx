@@ -1,37 +1,62 @@
 import React from "react";
+import { Row } from "../Layout/rows";
+import { Column } from "../Layout/columns";
+import Spinner from "../Components/Spinner";
 export default function FormSelect({
   className = "",
+  loading = false,
   options,
+  allowEmpty = false,
   isMulti = false,
   required = false,
-  value,
-  setValue,
+  defaultValue,
+  onChange,
   title = null,
   placeholder = "",
+  errorMessage,
   id,
   type,
+  ...props
 }) {
   return (
-    <>
+    <Column className={"flex-grow relative " + className}>
       {title && (
-        <label className="" htmlFor={id}>
-          {title}
+        <label className="text-sm truncate" htmlFor={id}>
+          {title} {required ? <></> : <span className="font-normal text-xs">(facultatif)</span>}
         </label>
       )}
-      <select
-        id={id}
-        multiple={isMulti}
-        required={required}
-        className={"" + className}
-        type={type}
-        placeholder={placeholder}
-        value={value}
-        onChange={setValue}
-      >
-        {options.map((option) => (
-          <option value={option.value}>{option.label}</option>
-        ))}
-      </select>
-    </>
+      {errorMessage != undefined && (
+        <span className="absolute text-error-color opacity-0 transition-opacity text-xs left-4 -bottom-5" htmlFor={id}>
+          {errorMessage}
+        </span>
+      )}
+      <Row className={"w-full " + className}>
+        {loading && <Spinner className="w-4 h-4" />}
+        {!loading && (
+          <select
+            id={id}
+            {...props}
+            multiple={isMulti}
+            required={required}
+            className={
+              "peer bg-background-dark border-text-color w-full focus:border-secondary-color invalid:border-error-color placeholder:text-test-light border-b focus:border pl-4 pr-8 py-2.5 focus:outline-0 focus:ring-1 " +
+              className
+            }
+            type={type}
+            placeholder={placeholder}
+            onChange={onChange}
+            defaultValue={defaultValue ? defaultValue : allowEmpty ? "" : options[0].value}
+          >
+            {allowEmpty && <option disabled value=""></option>}
+            {options.map((option, k) => (
+              <option key={"option_" + k} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        )}
+        <i className={"fi fi-ss-exclamation text-sm opacity-0 peer-invalid:opacity-100 relative -left-8 text-error-color"} />
+      </Row>
+    </Column>
   );
 }

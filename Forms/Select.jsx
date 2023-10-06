@@ -42,6 +42,7 @@ export default function Select({
         onChange(value);
       }}
       multiple={isMulti}
+      by="label"
     >
       <div className="relative">
         <Listbox.Button as="div" className={buttonClassName + " flex items-center whitespace-nowrap w-fit max-w-xs space-x-6 py-2 px-4 rounded-lg border"}>

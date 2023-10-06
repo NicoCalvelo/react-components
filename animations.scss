@@ -1,0 +1,22 @@
+.not-dismissable {
+  animation: notDismissable 0.15s ease-in;
+}
+
+@keyframes notDismissable {
+  0% {
+    position: relative;
+    left: 0px;
+  }
+  25% {
+    left: -1rem;
+    scale: 1.04;
+  }
+  50% {
+    left: 0.75rem;
+    scale: 1.04;
+  }
+  100% {
+    left: 0rem;
+    scale: 1;
+  }
+}

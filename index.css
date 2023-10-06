@@ -1,0 +1,127 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+@import url("https://fonts.googleapis.com/css?family=Saira:100,200,300,400,500,600,700,800&display=swap");
+@import "~@flaticon/flaticon-uicons/css/all/all";
+@import url("./animations.scss");
+
+body {
+  background-color: #eaf1f3;
+  color: #1e1e23;
+  margin: 0;
+  font-family: "Saira", -apple-system, BlinkMacSystemFont, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+a {
+  cursor: pointer;
+}
+
+.hBPTft {
+  table-layout: fixed;
+}
+.bMuwEY {
+  min-height: fit-content !important;
+  overflow-y: auto !important;
+}
+.rdt_Table {
+  min-width: fit-content !important;
+  max-width: none !important;
+}
+
+h1 {
+  font-size: 3rem;
+  font-weight: 800;
+  line-height: 100%;
+}
+
+h2 {
+  font-size: 2.5rem;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+h3 {
+  font-size: 2rem;
+  font-weight: 700;
+  line-height: 100%;
+}
+
+h4 {
+  font-size: 1.75rem;
+  font-weight: 500;
+  line-height: 100%;
+}
+
+h5 {
+  font-size: 1.5rem;
+  font-weight: 500;
+  line-height: 100%;
+}
+
+h6 {
+  font-size: 1.2rem;
+  font-weight: 500;
+  line-height: 100%;
+}
+
+i {
+  aspect-ratio: 1 / 1;
+  display: inline-flex !important;
+  width: min-content;
+  height: min-content;
+  line-height: 1 !important;
+  vertical-align: middle;
+}
+
+label:has(~ div > input:focus) {
+  color: #b979a9;
+}
+label:has(~ div > input:invalid) {
+  color: #f45b69;
+}
+span:has(~ div > input:invalid) {
+  opacity: 100%;
+}
+
+label:has(~ div > select:focus) {
+  color: #b979a9;
+}
+label:has(~ div > select:invalid) {
+  color: #f45b69;
+}
+span:has(~ div > select:invalid) {
+  opacity: 100%;
+}
+
+label:has(~ textarea:focus) {
+  color: #b979a9;
+}
+label:has(~ textarea:invalid) {
+  color: #f45b69;
+}
+
+.search-bar:has(> input:focus) {
+  border-color: #b979a9;
+  color: #6b385f;
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.05);
+}
+
+@layer components {
+  /* Required by Prefabs folder ---- */
+  .btn {
+    @apply font-semibold transition-all duration-75 ease-in-out flex w-fit items-center space-x-2 cursor-pointer focus:ring-0 px-6 py-2 disabled:pointer-events-none disabled:opacity-70;
+  }
+  .icon-btn {
+    @apply transition-all rounded-full duration-75 ease-in-out cursor-pointer focus:ring-0 p-2 disabled:pointer-events-none disabled:opacity-70;
+  }
+  .card {
+    @apply relative p-4;
+  }
+
+  /* Personalized */
+  .menu-item {
+    @apply flex space-x-2 items-center px-5 py-2.5 cursor-pointer hover:bg-primary-color hover:bg-opacity-5;
+  }
+}

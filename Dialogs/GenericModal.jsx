@@ -46,13 +46,13 @@ export default function GenericModal({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <Dialog.Panel className="relative mx-auto max-h-screen h-fit flex flex-col transform bg-background-dark overflow-hidden rounded-xl shadow-xl transition-all sm:mt-10 sm:mb-4 sm:w-full sm:max-w-4xl">
+            <Dialog.Panel className="relative mx-auto max-h-screen h-3/4 flex flex-col transform bg-background-color overflow-hidden shadow-xl transition-all sm:mt-10 sm:mb-4 sm:w-full sm:max-w-4xl">
               {showHeader && (
                 <div className="bg-background-color border-b flex items-center flex-grow">
                   <Dialog.Title as="h3" className="p-4 text-text-color">
                     {title}
                   </Dialog.Title>
-                  <IconButton className="sm:hidden ml-auto mr-2" onClick={() => setOpen(false)}>
+                  <IconButton className="ml-auto mr-2" onClick={() => setOpen(false)}>
                     <svg
                       xmlns="http://www.w3.org/2000/svg"
                       fill="none"
