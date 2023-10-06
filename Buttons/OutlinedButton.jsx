@@ -9,7 +9,7 @@ export default function OutlinedButton({ className = "", hasIcon = false, type =
       type={type}
       {...props}
       className={
-        "btn border border-primary-color bg-primary-dark dark:bg-primary-light bg-opacity-0 hover:bg-opacity-10 " + (hasIcon && " pl-4 ") + " " + className
+        "btn border text-primary-color border-primary-color bg-primary-dark dark:bg-primary-light bg-opacity-0 hover:bg-opacity-5 " + (hasIcon && " pl-4 ") + " " + className
       }
     >
       {props.children}
@@ -26,7 +26,7 @@ export function ErrorOutlinedButton({ className = "", hasIcon = false, type = "b
       type={type}
       {...props}
       className={
-        "btn border border-error-color bg-error-light dark:bg-error-dark bg-opacity-0 hover:bg-opacity-10 " +
+        "btn border text-error-color border-error-color bg-error-light dark:bg-error-dark bg-opacity-0 hover:bg-opacity-10 " +
         (hasIcon && " pl-4 ") +
         " " +
         className
@@ -45,9 +45,7 @@ export function WarningOutlinedButton({ className = "", hasIcon = false, type = 
       disabled={disable}
       type={type}
       {...props}
-      className={
-        "btn border border-warning-color bg-warning-color bg-opacity-0 hover:bg-opacity-10 " + (hasIcon && " pl-4 ") + " " + className
-      }
+      className={"btn border border-warning-color bg-warning-color bg-opacity-0 hover:bg-opacity-10 " + (hasIcon && " pl-4 ") + " " + className}
     >
       {props.children}
     </button>

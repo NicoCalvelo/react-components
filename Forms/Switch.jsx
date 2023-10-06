@@ -1,30 +1,43 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Row } from "../Layout/rows";
 
-export default function Switch({ selected, setSelected, disabled = false, label, ...props }) {
+export default function Switch({ id, selected = false, setSelected, disabled = false, label, fromRightToLeft = false, ...props }) {
+  const [value, setValue] = useState(selected);
+
+  useEffect(() => {
+    setValue(selected);
+  }, [selected]);
+
   return (
-    <Row className="space-x-2">
+    <Row className={"flex-grow " + (fromRightToLeft ? "flex-row-reverse" : "")}>
+      {label && <label className={"text-sm flex-grow sm:text-base " + (value ? "font-semibold" : "") + (disabled ? " opacity-50" : "")}>{label}</label>}
       <div
         onClick={() => {
-          if (!disabled) setSelected(!selected);
+          if (!disabled && setSelected !== undefined) setSelected(!value);
+          if (setSelected === undefined) {
+            if (id === undefined) throw "Must define an id if setSelected isn't defined";
+            document.getElementById(id).click();
+          }
         }}
         className={
           "relative w-14 transition-all duration-300 ease-in-out border flex items-center border-1 rounded-full h-8 " +
-          (selected ? "border-text-light bg-secondary-color" : "border-text-color bg-gray-700") +
+          (value ? "border-text-light bg-secondary-color" : "border-text-color bg-background-color") +
           " " +
-          (disabled ? "opacity-75" : "cursor-pointer")
+          (disabled ? "opacity-50" : "cursor-pointer") +
+          " " +
+          (fromRightToLeft ? "mr-2" : "ml-2")
         }
       >
         <div
           className={
             "transitiona-all duration-300 ease-in-out rounded-full " +
-            (selected ? "bg-gray-50 w-6 h-6 flex items-center justify-center ml-auto mr-1" : "bg-gray-400 w-4 h-4 mr-auto ml-1")
+            (value ? "bg-gray-50 w-6 h-6 flex items-center justify-center ml-auto mr-1" : "bg-gray-400 w-4 h-4 mr-auto ml-1")
           }
         >
-          {selected && props.children}
+          {value && props.children}
         </div>
+        <input id={id} type="checkbox" hidden defaultChecked={value} onChange={(e) => setValue(e.target.checked)} />
       </div>
-      {label && <label className={"text-sm sm:text-base " + (selected ? "font-semibold" : "")}>{label}</label>}
     </Row>
   );
 }

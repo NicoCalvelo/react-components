@@ -55,3 +55,17 @@ export function InfoFilledButton({ className = "", hasIcon = false, type = "butt
     </button>
   );
 }
+
+export function SuccesFilledButton({ className = "", hasIcon = false, type = "button", onClick, disable = false, ...props }) {
+  return (
+    <button
+      onClick={onClick}
+      disabled={disable}
+      type={type}
+      {...props}
+      className={"btn bg-succes-color text-succes-on dark:bg-succes-light dark:text-succes-dark " + (hasIcon && " pl-4 ") + " " + className}
+    >
+      {props.children}
+    </button>
+  );
+}

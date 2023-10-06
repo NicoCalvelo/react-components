@@ -24,18 +24,18 @@ export function ControlledCheckbox({ className = "", selected, setSelected }) {
 
   return (
     <div
-      className={"w-fit h-fit cursor-pointer rounded-full transition-all duration-100 p-1.5 " + (selected ? "" : "hover:bg-primary-color hover:bg-opacity-20")}
+      className={"w-fit h-fit cursor-pointer rounded-full transition-all duration-100 p-1.5 " + (selected ? "" : "hover:bg-secondary-color hover:bg-opacity-20")}
       onClick={() => setSelected(!selected)}
     >
       <div
         className={
           className +
           " h-6 w-6 rounded p-0.5 border-2 transition-all duration-100 ease-in-out " +
-          (selected ? "bg-primary-color text-primary-on border-primary-dark" : "border-text-light")
+          (selected ? "bg-secondary-color text-secondary-on border-secondary-dark" : "border-text-light")
         }
       >
         {selected && (
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-full h-full mr-2">
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={2} stroke="currentColor" className="w-full h-full mr-2">
             <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 12.75l6 6 9-13.5" />
           </svg>
         )}
