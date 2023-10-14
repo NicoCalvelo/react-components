@@ -38,7 +38,7 @@ export default function FormInput({
           maxLength={maxLength}
           pattern={pattern}
           className={
-            "peer bg-background-dark border-text-color focus:border-secondary-color invalid:border-error-color placeholder:text-test-light border-b  w-full focus:border pl-4 pr-8 py-2.5 focus:outline-0 focus:ring-1 " +
+            "peer bg-background-dark border-text-color focus:border-secondary-color invalid:border-error-color placeholder:text-test-light border-b  w-full focus:border pl-4 pr-6 py-2 focus:outline-0 focus:ring-1 " +
             className +
             (type == "file"
               ? " relative file:bg-primary-color file:text-primary-on file:text-sm file:font-semibold file:m-0 file:border-0 file:absolute file:cursor-pointer file:right-10 file:top-0.5 file:px-4 file:py-2.5"
@@ -51,7 +51,7 @@ export default function FormInput({
           value={value}
           onChange={setValue}
         />
-        <i className={"fi fi-ss-exclamation text-sm opacity-0 peer-invalid:opacity-100 relative -left-6 text-error-color"} />
+        <i className={"fi fi-ss-exclamation text-sm opacity-0 peer-invalid:opacity-100 absolute right-2 text-error-color"} />
       </Row>
     </Column>
   );

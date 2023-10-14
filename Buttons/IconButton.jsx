@@ -8,7 +8,7 @@ export default function IconButton({ className = "", type = "button", onClick, d
         disabled={disable}
         type={type}
         {...props}
-        className={"peer icon-btn bg-background-dark dark:bg-dark-background-light bg-opacity-0 hover:bg-opacity-10 " + className}
+        className={"peer icon-btn hover:bg-opacity-75 " + className}
       >
         {props.children}
       </button>

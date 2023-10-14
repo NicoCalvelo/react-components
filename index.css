@@ -111,10 +111,10 @@ label:has(~ textarea:invalid) {
 @layer components {
   /* Required by Prefabs folder ---- */
   .btn {
-    @apply font-semibold transition-all duration-75 ease-in-out flex w-fit items-center space-x-2 cursor-pointer focus:ring-0 px-6 py-2 disabled:pointer-events-none disabled:opacity-70;
+    @apply font-semibold transition-all duration-75 ease-in-out whitespace-nowrap flex w-fit items-center space-x-2 cursor-pointer focus:ring-0 px-6 py-2 disabled:pointer-events-none disabled:opacity-70;
   }
   .icon-btn {
-    @apply transition-all rounded-full duration-75 ease-in-out cursor-pointer focus:ring-0 p-2 disabled:pointer-events-none disabled:opacity-70;
+    @apply transition-all rounded-lg w-8 h-8 duration-75 ease-in-out cursor-pointer focus:ring-0 flex justify-center items-center disabled:pointer-events-none disabled:opacity-70;
   }
   .card {
     @apply relative p-4;

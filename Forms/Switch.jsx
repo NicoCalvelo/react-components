@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Row } from "../Layout/rows";
 
-export default function Switch({ id, selected = false, setSelected, disabled = false, label, fromRightToLeft = false, ...props }) {
+export default function Switch({ id, className = "", selected = false, setSelected, disabled = false, label, fromRightToLeft = false, ...props }) {
   const [value, setValue] = useState(selected);
 
   useEffect(() => {
@@ -9,8 +9,8 @@ export default function Switch({ id, selected = false, setSelected, disabled = f
   }, [selected]);
 
   return (
-    <Row className={"flex-grow " + (fromRightToLeft ? "flex-row-reverse" : "")}>
-      {label && <label className={"text-sm flex-grow sm:text-base " + (value ? "font-semibold" : "") + (disabled ? " opacity-50" : "")}>{label}</label>}
+    <Row className={className + " " + (fromRightToLeft ? "flex-row-reverse pr-6" : "pl-6")}>
+      {label && <label className={"text-sm sm:text-base " + (value ? "font-semibold" : "") + (disabled ? " opacity-50" : "")}>{label}</label>}
       <div
         onClick={() => {
           if (!disabled && setSelected !== undefined) setSelected(!value);

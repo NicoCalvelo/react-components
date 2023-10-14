@@ -19,7 +19,7 @@ export default function FormSelect({
   ...props
 }) {
   return (
-    <Column className={"flex-grow relative " + className}>
+    <Column className={"flex-grow relative"}>
       {title && (
         <label className="text-sm truncate" htmlFor={id}>
           {title} {required ? <></> : <span className="font-normal text-xs">(facultatif)</span>}
@@ -30,32 +30,33 @@ export default function FormSelect({
           {errorMessage}
         </span>
       )}
-      <Row className={"w-full " + className}>
-        {loading && <Spinner className="w-4 h-4" />}
-        {!loading && (
-          <select
-            id={id}
-            {...props}
-            multiple={isMulti}
-            required={required}
-            className={
-              "peer bg-background-dark border-text-color w-full focus:border-secondary-color invalid:border-error-color placeholder:text-test-light border-b focus:border pl-4 pr-8 py-2.5 focus:outline-0 focus:ring-1 " +
-              className
-            }
-            type={type}
-            placeholder={placeholder}
-            onChange={onChange}
-            defaultValue={defaultValue ? defaultValue : allowEmpty ? "" : options[0].value}
-          >
-            {allowEmpty && <option disabled value=""></option>}
-            {options.map((option, k) => (
-              <option key={"option_" + k} value={option.value}>
-                {option.label}
-              </option>
-            ))}
-          </select>
-        )}
-        <i className={"fi fi-ss-exclamation text-sm opacity-0 peer-invalid:opacity-100 relative -left-8 text-error-color"} />
+      <Row>
+        <select
+          id={id}
+          {...props}
+          multiple={isMulti}
+          required={required}
+          className={
+            "peer bg-background-dark border-text-color flex-grow focus:border-secondary-color placeholder:text-test-light border-b focus:border pl-4 pr-8 py-2 focus:outline-0 focus:ring-1 " +
+            +" " +
+            (loading ? "" : "invalid:border-error-color") +
+            " " +
+            className
+          }
+          type={type}
+          placeholder={placeholder}
+          onChange={onChange}
+          defaultValue={defaultValue ? defaultValue : allowEmpty ? "" : undefined}
+        >
+          {allowEmpty && <option disabled value=""></option>}
+          {options?.map((option, k) => (
+            <option key={"option_" + k} value={option.value}>
+              {option.label}
+            </option>
+          ))}
+        </select>
+        {loading && <Spinner className="w-4 h-4 absolute right-8" />}
+        {!loading && <i className="fi fi-ss-exclamation text-sm opacity-0 peer-invalid:opacity-100 absolute right-8 text-error-color" />}
       </Row>
     </Column>
   );
