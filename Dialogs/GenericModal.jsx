@@ -46,7 +46,7 @@ export default function GenericModal({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <Dialog.Panel className="relative mx-auto max-h-screen h-3/4 flex flex-col transform bg-background-color overflow-hidden shadow-xl transition-all sm:mt-10 sm:mb-4 sm:w-full sm:max-w-4xl">
+            <Dialog.Panel className="dialog-panel">
               {showHeader && (
                 <div className="bg-background-color border-b flex items-center flex-grow">
                   <Dialog.Title as="h3" className="p-4 text-text-color">

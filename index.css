@@ -18,18 +18,6 @@ a {
   cursor: pointer;
 }
 
-.hBPTft {
-  table-layout: fixed;
-}
-.bMuwEY {
-  min-height: fit-content !important;
-  overflow-y: auto !important;
-}
-.rdt_Table {
-  min-width: fit-content !important;
-  max-width: none !important;
-}
-
 h1 {
   font-size: 3rem;
   font-weight: 800;
@@ -118,6 +106,9 @@ label:has(~ textarea:invalid) {
   }
   .card {
     @apply relative p-4;
+  }
+  .dialog-panel {
+    @apply relative mx-auto max-h-screen flex flex-col transform bg-background-dark rounded-3xl overflow-hidden shadow-xl transition-all sm:mt-10 sm:mb-4 sm:w-full sm:max-w-4xl;
   }
 
   /* Personalized */
