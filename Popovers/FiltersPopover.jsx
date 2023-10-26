@@ -5,7 +5,7 @@ import Switch from "../Forms/Switch";
 export default function FiltersPopover({ filters, setFilters, fromLeftToRight = false }) {
   return (
     <PopOverMenu
-      buttonClassName="btn flex items-center rounded-full"
+      buttonClassName="btn flex items-center rounded-full focus:outline outline-1"
       popoverButton={
         <>
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
