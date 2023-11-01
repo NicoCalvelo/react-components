@@ -63,6 +63,7 @@ For the use of this folder components it's necessary to install
 ```
 
 <h3>Include these div's in the HTML</h3>
+
 ```html
 	<div id="toasts"></div>
 	<div id="confirmation_dialogs"></div>
