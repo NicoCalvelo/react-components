@@ -27,7 +27,7 @@ export function Toasts({}) {
     };
   }, [toast]);
 
-  return <div className={"absolute z-50 left-0 right-0 transition-all duration-300 " + (toast ? "bottom-5 opacity-100" : "bottom-0 opacity-0")}>{toast}</div>;
+  return <div className={"fixed z-50 left-0 right-0 transition-all duration-300 " + (toast ? "bottom-5 opacity-100" : "bottom-0 opacity-0")}>{toast}</div>;
 }
 
 export var setToast;
