@@ -1,47 +1,17 @@
 # react-components
 
 Components made in React with tailwind-js, hero-icons and headless-ui ( buttons, forms, dialogs, cards and more ). I use them as base components for my projects.
+---------------
+<details id=1 open>
+<summary><h1>Make it shine ✨</h1></summary>
+Follow the next points to set the styles correctly
 
-For the use of this folder components it's necessary to install :
-
-```json
-    "dependencies":
-        "@headlessui/react": "^1.7.17",
-        "@headlessui/tailwindcss": "^0.2.0",
-
-    "devDependencies":
-        "tailwindcss": "^3.3.3",
-
-```
-
-And include in the tailwind.config.js the next plugins :
-
-```js
-    plugins: [
-        require("@headlessui/tailwindcss")({ prefix: "ui" })
-    ],
-
-```
-
-For the appropiates color scheme it's necessary to extend the colors in the tailwind.config.js file : 
+<h3>Colors</h3>
+For the appropiates color scheme it's necessary to extend the colors in the tailwind.config.js file.
 There is an example file at the root of this project
 
-----------------------
-
-Include this div's in the HTML
-```html
-	<div id="toasts"></div>
-	<div id="confirmation_dialogs"></div>
-	<div id="root"></div>
-```
-Import in the index.js file the files to include toasts ad dialogs
-```js
-import "./base/Providers/ToastsProvider.js";
-import "./base/Providers/ConfirmationDialogsProvider.js";
-
-```
-
-include in the index.css file
+<h3>To include in the index.css file :</h3>
+there is also a index.css file at the root for example !
 
 ```css
 @layer components {
@@ -74,3 +44,44 @@ include in the index.css file
   }
 }
 ```
+</details>
+
+
+<details id=2>
+<summary><h1>Make it work 🔨</h1></summary>
+
+For the use of this folder components it's necessary to install 
+
+```json
+    "dependencies":
+        "@headlessui/react": "^1.7.17",
+        "@headlessui/tailwindcss": "^0.2.0",
+
+    "devDependencies":
+        "tailwindcss": "^3.3.3",
+
+```
+
+<h3>Include these div's in the HTML</h3>
+```html
+	<div id="toasts"></div>
+	<div id="confirmation_dialogs"></div>
+	<div id="root"></div>
+```
+<h3>Import in the index.js file the files to include toasts ad dialogs</h3>
+
+```js
+import "./base/Providers/ToastsProvider.js";
+import "./base/Providers/ConfirmationDialogsProvider.js";
+
+```
+
+<h3>And include in the tailwind.config.js the next plugins </h3>
+
+```js
+    plugins: [
+        require("@headlessui/tailwindcss")({ prefix: "ui" })
+    ],
+
+```
+</details>
