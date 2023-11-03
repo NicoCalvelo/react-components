@@ -11,19 +11,21 @@ export default function FormTextarea({
   placeholder = "",
   resizable = true,
   errorMessage,
+  disabled = false,
+  messageDisabled,
   id,
   rows = undefined,
 }) {
   return (
-    <Column className="relative flex-grow h-full">
+    <Column className="relative flex-grow h-full space-y-0.5">
       {title && (
         <label className="text-sm pr-5 truncate mb-1" htmlFor={id}>
-          {title} {required ? <></> : <span className="font-normal text-xs">(facultatif)</span>}
+          {title} {required || disabled ? <></> : <span className="font-normal text-xs">(facultatif)</span>}
         </label>
       )}
-      {errorMessage != undefined && (
-        <span className="absolute opacity-0 peer-invalid:opacity-100 text-error-color text-xs left-4 -bottom-5" htmlFor={id}>
-          {errorMessage}
+      {(errorMessage != undefined || messageDisabled != undefined) && (
+        <span className={"opacity-0 text-xs ml-4 order-2 " + (errorMessage ? "text-error-color" : "text-gray-500")} htmlFor={id}>
+          {errorMessage ? errorMessage : messageDisabled}
         </span>
       )}
       <textarea
@@ -31,8 +33,9 @@ export default function FormTextarea({
         minLength={minLength}
         maxLength={maxLength}
         required={required}
+        disabled={disabled}
         className={
-          "peer bg-background-dark border-text-color focus:border-secondary-color invalid:border-error-color placeholder:text-test-light w-full border-b focus:border p-4 focus:outline-0 focus:ring-1 " +
+          "peer bg-background-dark border-text-color focus:border-secondary-color order-1 disabled:opacity-50 invalid:border-error-color placeholder:text-test-light w-full border-b focus:border p-4 focus:outline-0 focus:ring-1 " +
           className
         }
         style={{ resize: resizable ? "both" : "none" }}

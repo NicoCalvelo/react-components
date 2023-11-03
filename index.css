@@ -69,7 +69,13 @@ label:has(~ div > input:focus) {
 label:has(~ div > input:invalid) {
   color: #f45b69;
 }
+label:has(~ div > input:disabled) {
+  color: #6b7280;
+}
 span:has(~ div > input:invalid) {
+  opacity: 100%;
+}
+span:has(~ div > input:disabled) {
   opacity: 100%;
 }
 
@@ -79,7 +85,13 @@ label:has(~ div > select:focus) {
 label:has(~ div > select:invalid) {
   color: #f45b69;
 }
+label:has(~ div > select:disabled) {
+  color: #6b7280;
+}
 span:has(~ div > select:invalid) {
+  opacity: 100%;
+}
+span:has(~ div > select:disabled) {
   opacity: 100%;
 }
 
@@ -88,6 +100,9 @@ label:has(~ textarea:focus) {
 }
 label:has(~ textarea:invalid) {
   color: #f45b69;
+}
+label:has(~ textarea:disabled) {
+  color: #6b7280;
 }
 
 .search-bar:has(> input:focus) {
