@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Row } from "../Layout/rows";
 import { Column } from "../Layout/columns";
 import Spinner from "../Components/Spinner";
@@ -20,44 +20,43 @@ export default function FormSelect({
   type,
   ...props
 }) {
+  const [isFocus, setFocus] = useState(false);
+
   return (
     <Column className="flex-grow relative space-y-0.5">
       {title && (
-        <label className="text-sm truncate" htmlFor={id}>
+        <label className={"transition-all duration-75 text-sm pr-5 truncate " + (isFocus ? "text-secondary-color font-medium" : "")} htmlFor={id}>
           {title} {required || disabled ? <></> : <span className="font-normal text-xs">(facultatif)</span>}
         </label>
       )}
-      {(errorMessage != undefined || messageDisabled != undefined) && (
-        <span className={"opacity-0 text-xs ml-4 order-2 " + (errorMessage ? "text-error-color" : "text-gray-500")} htmlFor={id}>
-          {errorMessage ? errorMessage : messageDisabled}
-        </span>
-      )}
       <Row className="order-1">
-        <select
-          id={id}
-          {...props}
-          multiple={isMulti}
-          required={required}
-          disabled={disabled}
-          className={
-            "peer bg-background-dark border-text-color flex-grow focus:border-secondary-color disabled:opacity-50 placeholder:text-test-light border-b focus:border pl-4 pr-8 py-2 focus:outline-0 focus:ring-1 " +
-            +" " +
-            (loading ? "" : "invalid:border-error-color") +
-            " " +
-            className
-          }
-          type={type}
-          placeholder={placeholder}
-          onChange={onChange}
-          defaultValue={defaultValue ? defaultValue : allowEmpty ? "" : undefined}
-        >
-          {allowEmpty && <option disabled value=""></option>}
-          {options?.map((option, k) => (
-            <option key={"option_" + k} value={option.value}>
-              {option.label}
-            </option>
-          ))}
-        </select>
+        {!loading && (
+          <select
+            id={id}
+            {...props}
+            title={disabled && messageDisabled ? messageDisabled : title}
+            multiple={isMulti}
+            required={required}
+            disabled={disabled}
+            onFocus={(e) => setFocus(true)}
+            onBlur={(e) => setFocus(false)}
+            className={"peer input" + " " + className}
+            onInvalid={(e) => {
+              if (errorMessage) e.target.setCustomValidity(errorMessage);
+            }}
+            type={type}
+            placeholder={placeholder}
+            onChange={onChange}
+            defaultValue={defaultValue ? defaultValue : allowEmpty ? "" : undefined}
+          >
+            {allowEmpty && <option disabled value=""></option>}
+            {options?.map((option, k) => (
+              <option key={"option_" + k} value={option.value}>
+                {option.label}
+              </option>
+            ))}
+          </select>
+        )}
         {loading && <Spinner className="w-4 h-4 absolute right-8" />}
         {!loading && <i className="fi fi-ss-exclamation text-sm opacity-0 peer-invalid:opacity-100 absolute right-8 text-error-color" />}
       </Row>

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 import { Column } from "../Layout/columns";
 export default function FormTextarea({
   className = "",
@@ -6,6 +6,7 @@ export default function FormTextarea({
   maxLength = undefined,
   value,
   setValue,
+  defaultValue,
   required = false,
   title = null,
   placeholder = "",
@@ -16,35 +17,42 @@ export default function FormTextarea({
   id,
   rows = undefined,
 }) {
+  const [isFocus, setFocus] = useState(false);
+
   return (
     <Column className="relative flex-grow h-full space-y-0.5">
       {title && (
-        <label className="text-sm pr-5 truncate mb-1" htmlFor={id}>
+        <label className={"transition-all duration-75 text-sm pr-5 truncate " + (isFocus ? "text-secondary-color font-medium" : "")} htmlFor={id}>
           {title} {required || disabled ? <></> : <span className="font-normal text-xs">(facultatif)</span>}
         </label>
       )}
       {(errorMessage != undefined || messageDisabled != undefined) && (
-        <span className={"opacity-0 text-xs ml-4 order-2 " + (errorMessage ? "text-error-color" : "text-gray-500")} htmlFor={id}>
+        <span className={"opacity-0 truncate text-xs ml-4 order-2 " + (errorMessage ? "text-error-color" : "text-gray-500")} htmlFor={id}>
           {errorMessage ? errorMessage : messageDisabled}
         </span>
       )}
       <textarea
         id={id}
         minLength={minLength}
-        maxLength={maxLength}
+        title={disabled && messageDisabled ? messageDisabled : title}
         required={required}
         disabled={disabled}
-        className={
-          "peer bg-background-dark border-text-color focus:border-secondary-color order-1 disabled:opacity-50 invalid:border-error-color placeholder:text-test-light w-full border-b focus:border p-4 focus:outline-0 focus:ring-1 " +
-          className
-        }
+        defaultValue={defaultValue}
+        onFocus={(e) => setFocus(true)}
+        onBlur={(e) => setFocus(false)}
+        className={"peer input " + className}
         style={{ resize: resizable ? "both" : "none" }}
         rows={rows}
         placeholder={placeholder}
         value={value}
         onChange={setValue}
       />
-      <i className={"fi fi-ss-exclamation text-sm opacity-0 peer-invalid:opacity-100 absolute top-8 right-4 text-error-color"} />
+      {(!maxLength || !isFocus) && <i className="fi fi-ss-exclamation text-sm opacity-0 peer-invalid:opacity-100 absolute right-2 text-error-color " />}
+      {maxLength && isFocus && (
+        <small className="absolute font-semibold bottom-2 right-1" id="max_lengt_text">
+          {value ? value.length : defaultValue?.length}
+        </small>
+      )}
     </Column>
   );
 }
