@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 
-export function HashRoutes({ ...props }) {
+export function HashRoutes({ dependencies, ...props }) {
   const hash = useLocation().hash;
   const defaultComponent = props.children.find((c) => c.props.index === true);
   const [selectedComponent, setSelectedComponent] = useState(props.children.find((c) => c.props.hash?.toLowerCase() === decodeURI(hash).toLowerCase()));
@@ -12,7 +12,7 @@ export function HashRoutes({ ...props }) {
 
   useEffect(() => {
     setSelectedComponent(props.children.find((c) => c.props.hash?.toLowerCase() === decodeURI(hash).toLowerCase()));
-  }, [hash]);
+  }, [hash, dependencies]);
 
   return hash === "" || hash === "#" ? defaultComponent === undefined ? <></> : defaultComponent : selectedComponent;
 }
