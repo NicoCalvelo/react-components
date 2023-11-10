@@ -49,7 +49,11 @@ export default function FormSelect({
             onChange={onChange}
             defaultValue={defaultValue ? defaultValue : allowEmpty ? "" : undefined}
           >
-            {allowEmpty && <option disabled value=""></option>}
+            {allowEmpty && (
+              <option disabled value="">
+                {placeholder}
+              </option>
+            )}
             {options?.map((option, k) => (
               <option key={"option_" + k} value={option.value}>
                 {option.label}
