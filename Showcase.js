@@ -6,9 +6,17 @@ import GradientButton from "./Buttons/GradientButton";
 import IconButton from "./Buttons/IconButton";
 import OutlinedButton, { ErrorOutlinedButton, InfoOutlinedButton, WarningOutlinedButton } from "./Buttons/OutlinedButton";
 import OutlinedIconButton from "./Buttons/OutlinedIconButton";
+import ElevatedCard from "./Cards/ElevatedCard";
 import FilledCard from "./Cards/FilledCard";
 import OutlinedCard from "./Cards/OutlinedCard";
 import { addCopyToClipboardToast } from "./Components/Toasts";
+import Checkbox from "./Forms/Checkbox";
+import Form from "./Forms/Form";
+import FormInput from "./Forms/FormInput";
+import FormSelect from "./Forms/FormSelect";
+import FormTextarea from "./Forms/FormTextarea";
+import RadioGroupPanel, { RadioGroupOption } from "./Forms/RadioGroup";
+import SearchSelect from "./Forms/SearchSelect";
 import { Column } from "./Layout/columns";
 import { GridCols3 } from "./Layout/grids";
 import { Row, RowBetween } from "./Layout/rows";
@@ -228,6 +236,210 @@ export default function Showcase() {
             </FilledIconButton>
           </Row>
         </OutlinedCard>
+      </FilledCard>
+      <section className="space-y-4">
+        <h2>Cards</h2>
+        <hr />
+        <p>All cards have the following properties : </p>
+        <ul></ul>
+        <GridCols3 className="gap-2">
+          <FilledCard>
+            <RowBetween className="pb-5">
+              <h3>Filled Card</h3>
+              <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<FilledCard />")}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                  />
+                </svg>
+              </OutlinedIconButton>
+            </RowBetween>
+            <p>A simple filled card with "background-color" as background-color and "current-color" as text-color.</p>
+          </FilledCard>
+          <OutlinedCard>
+            <RowBetween className="pb-5">
+              <h3>Outlined Card</h3>
+              <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<OutlinedCard />")}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                  />
+                </svg>
+              </OutlinedIconButton>
+            </RowBetween>
+            <p>A simple outlined card with "current-color" as text-color and border-color.</p>
+          </OutlinedCard>
+          <ElevatedCard>
+            <RowBetween className="pb-5">
+              <h3>Elevated Card</h3>
+              <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<ElevatedCard />")}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                  <path
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                    d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                  />
+                </svg>
+              </OutlinedIconButton>
+            </RowBetween>
+            <p>It's like a filled card with a shadow property to add elevation.</p>
+          </ElevatedCard>
+        </GridCols3>
+      </section>
+      <FilledCard className="space-y-4">
+        <h2>Forms</h2>
+        <p>
+          It all starts wit a {"<Form />"} component. It just call a function onSubmit to be handled by a javascript funciton. It does not accept a method
+          parameter.
+        </p>
+        <hr />
+        <Form className="space-y-4">
+          <h3>Register form</h3>
+          <hr />
+
+          <Column className="space-y-2 p-2">
+            <h5>Form Inputs</h5>
+            <p>
+              The <strong>{"<FormInput />"}</strong> is by default a text input type. They accept the same properties a normal {"<input />"} does.
+            </p>
+            <OutlinedCard className="space-y-2">
+              <Row className="space-x-2">
+                <FormInput required title="First name" placeholder="John" />
+                <FormInput required title="Last name" placeholder="Doe" />
+                <FormInput title="Username" placeholder="jhondoe" />
+              </Row>
+              <Row className="space-x-2">
+                <FormInput type="date" title="Birthday" />
+                <FormInput required title="Password" type={"password"} placeholder="Password..." />
+                <FormInput
+                  required
+                  title="Repeat password"
+                  disabled
+                  messageDisabled="Please type your password before."
+                  type={"Confimr Password"}
+                  placeholder="Password again..."
+                />
+              </Row>
+            </OutlinedCard>
+          </Column>
+          <hr />
+
+          <Column className="space-y-2 p-2">
+            <h5>Form Select</h5>
+            <p>
+              The <strong>{"<FormSelect />"}</strong> allows you to chose betewen diferents options. They accept the same properties a normal {"<select />"}{" "}
+              does.
+            </p>
+            <OutlinedCard className="space-y-2">
+              <Row className="space-x-2">
+                <FormSelect
+                  required
+                  allowEmpty
+                  title="Country"
+                  options={[
+                    { value: "fr", label: "France" },
+                    { value: "en", label: "England" },
+                    { value: "es", label: "Spain" },
+                    { value: "it", label: "Italy", disable: true },
+                  ]}
+                />
+                <FormSelect
+                  allowEmpty
+                  title="City"
+                  options={[
+                    { value: "paris", label: "Paris" },
+                    { value: "london", label: "London" },
+                  ]}
+                />
+                <FormSelect
+                  allowEmpty
+                  title="Region"
+                  disabled
+                  messageDisabled="Regions are only available for France."
+                  options={[
+                    { value: "idf", label: "Île-de-France" },
+                    { value: "bfc", label: "Bourgogne-Franche-Comté" },
+                  ]}
+                />
+              </Row>
+            </OutlinedCard>
+          </Column>
+          <hr />
+
+          <Column className="space-y-2 p-2">
+            <h5>Form Text Area</h5>
+            <p>
+              The <strong>{"<FormTextarea />"}</strong> allows you to type those long long texts. They accept the same properties a normal {"<textarea />"}{" "}
+              does.
+            </p>
+            <OutlinedCard className="space-y-2">
+              <Row className="space-x-2">
+                <FormTextarea required title="Biography" maxLength={255} errorMessage={"Please fill in the champ"} />
+                <FormTextarea title="Commentaire" resizable={false} maxLength={255} defaultValue={"A not resizable textarea with a default value"} />
+              </Row>
+            </OutlinedCard>
+          </Column>
+          <hr />
+
+          <Column className="space-y-2 p-2">
+            <h5>Form Checkbox</h5>
+            <p>
+              A simple <strong>{"<Checkbox />"}</strong> with a <strong>{"<ControlledCheckbox />"}</strong> variant that can be controlled by a state.
+            </p>
+            <OutlinedCard className="space-y-2">
+              <Row>
+                <Checkbox />
+                <p>I agree to the terms and conditions</p>
+              </Row>
+              <Row>
+                <Checkbox defaultSelected />
+                <p>I would like to receive promtions emails</p>
+              </Row>
+            </OutlinedCard>
+          </Column>
+          <hr />
+
+          <Column className="space-y-2 p-2">
+            <h5>Form Radio Group</h5>
+            <p>
+              A <strong>{"<RadioGroupPanel />"}</strong> component composed by many <strong>{"<RadioGroupOption />"}</strong> components.
+            </p>
+            <OutlinedCard className="space-y-2">
+              <RadioGroupPanel title={"Select yours"}>
+                <RadioGroupOption text={"Option 1"} />
+                <RadioGroupOption text={"Option 2"} />
+                <RadioGroupOption text={"Option 3"} />
+              </RadioGroupPanel>
+            </OutlinedCard>
+          </Column>
+          <hr />
+
+          <Column className="space-y-2 p-2">
+            <h5>Form Search Select</h5>
+            <p>
+              A <strong>{"<SearchSelect />"}</strong> component that allows user to input a new value or select an existing one. It can be an unique value or
+              multiple. And the value can be nullable or not.
+            </p>
+            <OutlinedCard className="space-y-2">
+              <Row className="space-x-2">
+                <SearchSelect
+                  required
+                  isNullable
+                  allowCustomValue
+                  items={[
+                    { id: 1, label: "Item 1" },
+                    { id: 2, label: "Item 2" },
+                    { id: 3, label: "Item 3", disabled: true },
+                  ]}
+                />
+              </Row>
+            </OutlinedCard>
+          </Column>
+        </Form>
       </FilledCard>
     </div>
   );
