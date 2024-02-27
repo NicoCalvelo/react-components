@@ -8,13 +8,14 @@ import IconButton from "../Buttons/IconButton";
 export default function GenericModal({
   title,
   loading = false,
+  messageLoading = "Chargement en cours ...",
   showFooter = true,
   showHeader = true,
   open,
   setOpen,
   showActionButton = true,
   textActionButton = "Enregistrer",
-  onActtionButton,
+  onActionButton,
   actionButtonType = "button",
   errorMessgae = null,
   ...props
@@ -46,10 +47,10 @@ export default function GenericModal({
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <Dialog.Panel className="dialog-panel">
+            <Dialog.Panel className="relative mx-auto max-h-screen h-4/5 flex flex-col transform bg-background-color overflow-hidden shadow-xl transition-all sm:mt-10 sm:mb-4 sm:w-full sm:max-w-4xl">
               {showHeader && (
                 <div className="bg-background-color border-b flex items-center flex-grow">
-                  <Dialog.Title as="h3" className="p-4 text-text-color">
+                  <Dialog.Title as="h3" className="p-4 text-text-color flex-grow">
                     {title}
                   </Dialog.Title>
                   <IconButton className="ml-auto mr-2" onClick={() => setOpen(false)}>
@@ -60,7 +61,8 @@ export default function GenericModal({
                 </div>
               )}
               {loading && (
-                <div data-testid="modal_spinner" className="flex h-full justify-center p-20">
+                <div data-testid="modal_spinner" className="flex flex-col h-full w-full items-center p-10">
+                  <p className="text-center text-text-light">{messageLoading}</p>
                   <Spinner />
                 </div>
               )}
@@ -72,7 +74,7 @@ export default function GenericModal({
                     Fermer
                   </OutlinedButton>
                   {showActionButton && (
-                    <FilledButton disable={loading} type={actionButtonType} onClick={onActtionButton}>
+                    <FilledButton disabled={loading} type={actionButtonType} onClick={onActionButton}>
                       {textActionButton}
                     </FilledButton>
                   )}

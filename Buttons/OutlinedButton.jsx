@@ -1,11 +1,11 @@
 import React from "react";
 
-export default function OutlinedButton({ className = "", hasIcon = false, type = "button", onClick, disable = false, reference, ...props }) {
+export default function OutlinedButton({ className = "", hasIcon = false, type = "button", onClick, disabled = false, reference, ...props }) {
   return (
     <button
       onClick={onClick}
       ref={reference}
-      disabled={disable}
+      disabled={disabled}
       type={type}
       {...props}
       className={
@@ -17,12 +17,12 @@ export default function OutlinedButton({ className = "", hasIcon = false, type =
   );
 }
 
-export function ErrorOutlinedButton({ className = "", hasIcon = false, type = "button", onClick, disable = false, reference, ...props }) {
+export function ErrorOutlinedButton({ className = "", hasIcon = false, type = "button", onClick, disabled = false, reference, ...props }) {
   return (
     <button
       onClick={onClick}
       ref={reference}
-      disabled={disable}
+      disabled={disabled}
       type={type}
       {...props}
       className={
@@ -37,12 +37,12 @@ export function ErrorOutlinedButton({ className = "", hasIcon = false, type = "b
   );
 }
 
-export function WarningOutlinedButton({ className = "", hasIcon = false, type = "button", onClick, disable = false, reference, ...props }) {
+export function WarningOutlinedButton({ className = "", hasIcon = false, type = "button", onClick, disabled = false, reference, ...props }) {
   return (
     <button
       onClick={onClick}
       ref={reference}
-      disabled={disable}
+      disabled={disabled}
       type={type}
       {...props}
       className={"btn border border-warning-color bg-warning-color bg-opacity-0 hover:bg-opacity-10 " + (hasIcon && " pl-4 ") + " " + className}
@@ -52,12 +52,12 @@ export function WarningOutlinedButton({ className = "", hasIcon = false, type = 
   );
 }
 
-export function InfoOutlinedButton({ className = "", hasIcon = false, type = "button", onClick, disable = false, reference, ...props }) {
+export function InfoOutlinedButton({ className = "", hasIcon = false, type = "button", onClick, disabled = false, reference, ...props }) {
   return (
     <button
       onClick={onClick}
       ref={reference}
-      disabled={disable}
+      disabled={disabled}
       type={type}
       {...props}
       className={"btn border border-info-color bg-info-color bg-opacity-0 hover:bg-opacity-10 " + (hasIcon && " pl-4 ") + " " + className}

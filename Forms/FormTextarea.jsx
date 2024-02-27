@@ -23,7 +23,7 @@ export default function FormTextarea({
     <Column className="relative flex-grow h-full space-y-0.5">
       {title && (
         <label className={"transition-all duration-75 text-sm pr-5 truncate " + (isFocus ? "text-secondary-color font-medium" : "")} htmlFor={id}>
-          {title} {required || disabled ? <></> : <span className="font-normal text-xs">(facultatif)</span>}
+          {title}
         </label>
       )}
       {(errorMessage != undefined || messageDisabled != undefined) && (

@@ -13,7 +13,7 @@ export default function OutlinedIconButton({ className = "", type = "button", on
         {props.children}
       </button>
       {tooltip && (
-        <div className="bg-black bg-opacity-60 pointer-events-none opacity-0 group-hover:opacity-100 absolute right-5 -top-4 transition-all duration-100 group-hover:delay-1000 rounded px-4 py-1">
+        <div className="bg-black bg-opacity-60 pointer-events-none opacity-0 group-hover:opacity-100 absolute  z-10 right-5 -top-4 transition-all duration-100 group-hover:delay-1000 rounded px-4 py-1">
           <p className="truncate text-sm text-white font-bold">{tooltip}</p>
         </div>
       )}

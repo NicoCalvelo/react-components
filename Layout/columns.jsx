@@ -10,7 +10,7 @@ export function Column({ className = "", id = undefined, ...props }) {
 
 export function ColumnCenter({ className = "", id = undefined, ...props }) {
   return (
-    <div {...props} id={id} className={"flex flex-col justify-center items-center " + " " + className}>
+    <div {...props} id={id} className={"flex flex-col justify-center items-center h-full " + " " + className}>
       {props.children}
     </div>
   );
@@ -18,7 +18,7 @@ export function ColumnCenter({ className = "", id = undefined, ...props }) {
 
 export function ColumnEnd({ className = "", id = undefined, ...props }) {
   return (
-    <div {...props} id={id} className={"flex flex-col h-full justify-end " + " " + className}>
+    <div {...props} id={id} className={"flex flex-col flex-grow justify-end items-end " + " " + className}>
       {props.children}
     </div>
   );

@@ -1,8 +1,8 @@
 import React from "react";
 
-export default function Spinner({ className = "w-8 h-8", ...props }) {
+export default function Spinner({ className = "mx-auto w-8 h-8", ...props }) {
   return (
-    <div className={"mx-auto " + className} role="status">
+    <div className={" " + className} role="status">
       <svg
         aria-hidden="true"
         className={"w-full h-full text-background-dark animate-spin dark:fill-primary-light fill-primary-dark"}

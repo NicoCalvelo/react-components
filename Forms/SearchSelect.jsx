@@ -43,7 +43,7 @@ export default function SearchSelect({
           placeholder={placeholder}
           displayValue={(item) => (isMulti ? item.map((i) => i?.label).join(", ") : item?.label)}
           className={
-            "peer py-2 px-4 focus:border focus:border-secondary-color invalid:border-error-color focus:outline-none bg-background-dark border-b border-text-color " +
+            "peer py-2 px-4 focus:border w-full focus:border-secondary-color invalid:border-error-color focus:outline-none bg-background-dark border-b border-text-color " +
             className
           }
         />

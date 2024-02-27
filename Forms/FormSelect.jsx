@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { Row } from "../Layout/rows";
 import { Column } from "../Layout/columns";
 import Spinner from "../Components/Spinner";
+
 export default function FormSelect({
   className = "",
   loading = false,
@@ -26,10 +27,10 @@ export default function FormSelect({
     <Column className="flex-grow relative space-y-0.5">
       {title && (
         <label className={"transition-all duration-75 text-sm pr-5 truncate " + (isFocus ? "text-secondary-color font-medium" : "")} htmlFor={id}>
-          {title} {required || disabled ? <></> : <span className="font-normal text-xs">(facultatif)</span>}
+          {title}
         </label>
       )}
-      <Row className="order-1">
+      <Row className={"order-1 " + (loading ? "h-10 bg-background-dark" : "")}>
         {!loading && (
           <select
             id={id}
@@ -40,20 +41,16 @@ export default function FormSelect({
             disabled={disabled}
             onFocus={(e) => setFocus(true)}
             onBlur={(e) => setFocus(false)}
-            className={"peer input" + " " + className}
+            className={"peer h-10 input" + " " + className}
             onInvalid={(e) => {
               if (errorMessage) e.target.setCustomValidity(errorMessage);
             }}
             type={type}
             placeholder={placeholder}
             onChange={onChange}
-            defaultValue={defaultValue ? defaultValue : allowEmpty ? "" : undefined}
+            defaultValue={defaultValue}
           >
-            {allowEmpty && (
-              <option disabled value="">
-                {placeholder}
-              </option>
-            )}
+            {allowEmpty && <option value={undefined}></option>}
             {options?.map((option, k) => (
               <option key={"option_" + k} value={option.value}>
                 {option.label}

@@ -9,13 +9,12 @@ export default function Switch({ id, className = "", selected = false, setSelect
   }, [selected]);
 
   return (
-    <Row className={className + " " + (fromRightToLeft ? "flex-row-reverse pr-6" : "pl-6")}>
+    <Row className={className + " " + (fromRightToLeft ? "flex-row-reverse pr-6 justify-end" : "pl-6")}>
       {label && <label className={"text-sm sm:text-base " + (value ? "font-semibold" : "") + (disabled ? " opacity-50" : "")}>{label}</label>}
       <div
         onClick={() => {
           if (!disabled && setSelected !== undefined) setSelected(!value);
-          if (setSelected === undefined) {
-            if (id === undefined) throw "Must define an id if setSelected isn't defined";
+          if (id !== undefined) {
             document.getElementById(id).click();
           }
         }}
