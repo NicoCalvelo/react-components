@@ -1,6 +1,6 @@
 import React from "react";
 import PopOverMenu from "./Popover";
-import Switch from "../Forms/Switch";
+import Switch from "../../Forms/Switch";
 
 export default function FiltersPopover({ filters, setFilters, fromLeftToRight = false }) {
   return (

@@ -1,7 +1,7 @@
 /** @type {import('tailwindcss').Config} */
 module.exports = {
   darkMode: "class",
-  content: ["./front/**/*.{js,jsx,ts,tsx}", "./templates/**/*.html.twig"],
+  content: ["./src/**/*.{js,jsx,ts,tsx}"],
   theme: {
     extend: {
       strokeWidth: {
@@ -10,7 +10,7 @@ module.exports = {
       colors: {
         dark: {
           background: {
-            color: "#123946",
+            color: "#0e0e14",
             light: "#204754",
           },
           text: {
@@ -44,7 +44,7 @@ module.exports = {
           dark: "#1E40AF",
           on: "#fff",
         },
-        succes: {
+        success: {
           light: "#B9F4D7",
           color: "#32DE8A",
           dark: "#147B49",

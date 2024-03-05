@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Row } from "../Layout/rows";
-import { Column } from "../Layout/columns";
+import { Row } from "../Layout/Rows";
+import { Column } from "../Layout/Columns";
 import Spinner from "../Components/Spinner";
 
 export default function FormSelect({

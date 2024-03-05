@@ -120,7 +120,7 @@ export function addToastInfo(text, waitSeconds = 6) {
   );
 }
 
-export function addToastSucces(text, waitSeconds = 6) {
+export function addToastSuccess(text, waitSeconds = 6) {
   seconds = waitSeconds;
   setToast(
     <div className={"rounded-xl shadow-xl p-5 w-full max-w-3xl flex justify-between font-medium items-center mx-auto bg-green-600 text-white"} role="alert">

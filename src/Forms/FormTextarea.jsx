@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Column } from "../Layout/columns";
+import { Column } from "../Layout/Columns";
 export default function FormTextarea({
   className = "",
   minLength = undefined,

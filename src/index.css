@@ -2,7 +2,6 @@
 @tailwind components;
 @tailwind utilities;
 @import url("https://fonts.googleapis.com/css?family=Saira:100,200,300,400,500,600,700,800&display=swap");
-@import "~@flaticon/flaticon-uicons/css/all/all";
 @import url("./animations.scss");
 
 body {
@@ -12,6 +11,11 @@ body {
   font-family: "Saira", -apple-system, BlinkMacSystemFont, sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+
+  .dark & {
+    background-color: #1e1e23;
+    color: #eaf1f3;
+  }
 }
 
 a {

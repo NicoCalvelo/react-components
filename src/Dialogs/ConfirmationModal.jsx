@@ -1,7 +1,7 @@
 import React, { Fragment, useEffect, useRef, useState } from "react";
 import { Dialog, Transition } from "@headlessui/react";
 import OutlinedButton from "../Buttons/OutlinedButton";
-import { RowEnd } from "../Layout/rows";
+import { RowEnd } from "../Layout/Rows";
 
 export default function ConfirmationModal({}) {
   const [open, setOpen] = useState(false);

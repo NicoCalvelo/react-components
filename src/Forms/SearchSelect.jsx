@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { Combobox, Transition } from "@headlessui/react";
-import { Row } from "../Layout/rows";
+import { Row } from "../Layout/Rows";
 import Spinner from "../Components/Spinner";
 
 /*

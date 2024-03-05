@@ -1,6 +1,6 @@
 import React, { useState } from "react";
-import { Column } from "../Layout/columns";
-import { Row } from "../Layout/rows";
+import { Column } from "../Layout/Columns";
+import { Row } from "../Layout/Rows";
 
 export default function FormInput({
   className = "",
