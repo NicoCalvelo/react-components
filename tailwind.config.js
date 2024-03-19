@@ -63,6 +63,11 @@ module.exports = {
           on: "#1a1414",
         },
       },
+      boxShadow: {
+        "light": "0 0 10px 0 rgba(255, 255, 255, 0.1)",
+        "light-lg": "0 0 15px -5px rgba(255, 255, 255, 0.1)",
+        "light-xl": "0 0 20px -10px rgba(255, 255, 255, 0.1)",
+      },
     },
   },
   plugins: [require("@headlessui/tailwindcss")({ prefix: "ui" })],

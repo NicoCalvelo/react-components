@@ -1,7 +1,7 @@
 import Form from "./Forms/Form";
 import Switch from "./Forms/Switch";
 import Checkbox from "./Forms/Checkbox";
-import React, { useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import { Column } from "./Layout/Columns";
 import FormInput from "./Forms/FormInput";
 import { GridCols3 } from "./Layout/Grids";
@@ -16,7 +16,7 @@ import ElevatedCard from "./Cards/ElevatedCard";
 import ElevatedButton from "./Buttons/ElevatedButton";
 import FilledIconButton from "./Buttons/FilledIconButton";
 import OutlinedIconButton from "./Buttons/OutlinedIconButton";
-import { addCopyToClipboardToast } from "./Components/Toasts";
+import { addCopyToClipboardToast, addToastInfo } from "./Components/Toasts";
 import FloatingActionButton from "./Buttons/FloatingActionButton";
 import RadioGroupPanel, { RadioGroupOption } from "./Forms/RadioGroup";
 import FilledButton, {
@@ -34,14 +34,11 @@ import OutlinedButton, {
 import TextButton from "./Buttons/TextButton";
 
 export default function Showcase() {
+  const [selectedView, setSelectedView] = useState(null);
+
   useEffect(() => {
     changeTheme(localStorage.getItem("dark") === "true");
   }, []);
-
-  function copyToClipboard(text) {
-    window.navigator.clipboard.writeText(text);
-    addCopyToClipboardToast('"' + text + '" copied to clipboard !');
-  }
 
   function changeTheme(dark) {
     if (dark) {
@@ -99,174 +96,47 @@ export default function Showcase() {
         </p>
         <hr />
       </header>
-      <ButtonsShowcase />
-      <CardsShowcase />
-      <FilledCard className="space-y-4">
-        <h2>Forms</h2>
-        <p>
-          It all starts wit a {"<Form />"} component. It just call a function onSubmit to be handled by a javascript
-          funciton. It does not accept a method parameter.
-        </p>
-        <hr />
-        <Form className="space-y-4">
-          <h3>Register form</h3>
-          <hr />
-
-          <Column className="space-y-2 p-2">
-            <h5>Form Inputs</h5>
-            <p>
-              The <strong>{"<FormInput />"}</strong> is by default a text input type. They accept the same properties a
-              normal {"<input />"} does.
-            </p>
-            <OutlinedCard className="space-y-2">
-              <Row className="space-x-2">
-                <FormInput required title="First name" placeholder="John" />
-                <FormInput required title="Last name" placeholder="Doe" />
-                <FormInput title="Username" placeholder="jhondoe" />
-              </Row>
-              <Row className="space-x-2">
-                <FormInput type="date" title="Birthday" />
-                <FormInput required title="Password" type={"password"} placeholder="Password..." />
-                <FormInput
-                  required
-                  title="Repeat password"
-                  disabled
-                  messageDisabled="Please type your password before."
-                  type={"Confimr Password"}
-                  placeholder="Password again..."
-                />
-              </Row>
-            </OutlinedCard>
-          </Column>
-          <hr />
-
-          <Column className="space-y-2 p-2">
-            <h5>Form Select</h5>
-            <p>
-              The <strong>{"<FormSelect />"}</strong> allows you to chose betewen diferents options. They accept the
-              same properties a normal {"<select />"} does.
-            </p>
-            <OutlinedCard className="space-y-2">
-              <Row className="space-x-2">
-                <FormSelect
-                  required
-                  allowEmpty
-                  title="Country"
-                  options={[
-                    { value: "fr", label: "France" },
-                    { value: "en", label: "England" },
-                    { value: "es", label: "Spain" },
-                    { value: "it", label: "Italy", disable: true },
-                  ]}
-                />
-                <FormSelect
-                  allowEmpty
-                  title="City"
-                  options={[
-                    { value: "paris", label: "Paris" },
-                    { value: "london", label: "London" },
-                  ]}
-                />
-                <FormSelect
-                  allowEmpty
-                  title="Region"
-                  disabled
-                  messageDisabled="Regions are only available for France."
-                  options={[
-                    { value: "idf", label: "Île-de-France" },
-                    { value: "bfc", label: "Bourgogne-Franche-Comté" },
-                  ]}
-                />
-              </Row>
-            </OutlinedCard>
-          </Column>
-          <hr />
-
-          <Column className="space-y-2 p-2">
-            <h5>Form Text Area</h5>
-            <p>
-              The <strong>{"<FormTextarea />"}</strong> allows you to type those long long texts. They accept the same
-              properties a normal {"<textarea />"} does.
-            </p>
-            <OutlinedCard className="space-y-2">
-              <Row className="space-x-2">
-                <FormTextarea required title="Biography" maxLength={255} errorMessage={"Please fill in the champ"} />
-                <FormTextarea
-                  title="Commentaire"
-                  resizable={false}
-                  maxLength={255}
-                  defaultValue={"A not resizable textarea with a default value"}
-                />
-              </Row>
-            </OutlinedCard>
-          </Column>
-          <hr />
-
-          <Column className="space-y-2 p-2">
-            <h5>Form Checkbox</h5>
-            <p>
-              A simple <strong>{"<Checkbox />"}</strong> with a <strong>{"<ControlledCheckbox />"}</strong> variant that
-              can be controlled by a state.
-            </p>
-            <OutlinedCard className="space-y-2">
-              <Row>
-                <Checkbox />
-                <p>I agree to the terms and conditions</p>
-              </Row>
-              <Row>
-                <Checkbox defaultSelected />
-                <p>I would like to receive promtions emails</p>
-              </Row>
-            </OutlinedCard>
-          </Column>
-          <hr />
-
-          <Column className="space-y-2 p-2">
-            <h5>Form Radio Group</h5>
-            <p>
-              A <strong>{"<RadioGroupPanel />"}</strong> component composed by many{" "}
-              <strong>{"<RadioGroupOption />"}</strong> components.
-            </p>
-            <OutlinedCard className="space-y-2">
-              <RadioGroupPanel title={"Select yours"}>
-                <RadioGroupOption text={"Option 1"} />
-                <RadioGroupOption text={"Option 2"} />
-                <RadioGroupOption text={"Option 3"} />
-              </RadioGroupPanel>
-            </OutlinedCard>
-          </Column>
-          <hr />
-
-          <Column className="space-y-2 p-2">
-            <h5>Form Search Select</h5>
-            <p>
-              A <strong>{"<SearchSelect />"}</strong> component that allows user to input a new value or select an
-              existing one. It can be an unique value or multiple. And the value can be nullable or not.
-            </p>
-            <OutlinedCard className="space-y-2">
-              <Row className="space-x-2">
-                <SearchSelect
-                  required
-                  isNullable
-                  allowCustomValue
-                  items={[
-                    { id: 1, label: "Item 1" },
-                    { id: 2, label: "Item 2" },
-                    { id: 3, label: "Item 3", disabled: true },
-                  ]}
-                />
-              </Row>
-            </OutlinedCard>
-          </Column>
-        </Form>
-      </FilledCard>
+      {!selectedView && (
+        <div className="grid grid-cols-3 gap-5">
+          {["Buttons", "Cards", "Forms"].map((e) => (
+            <ElevatedCard className="space-y-4" key={e} onClick={() => setSelectedView(e)}>
+              <h2>{e}</h2>
+              <p>View more about {e} !</p>
+            </ElevatedCard>
+          ))}
+        </div>
+      )}
+      {selectedView && (
+        <>
+          <OutlinedButton onClick={() => setSelectedView(null)} hasIcon>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
+              />
+            </svg>
+            <p>Go back</p>
+          </OutlinedButton>
+          {selectedView === "Buttons" && <ButtonsShowcase />}
+          {selectedView === "Cards" && <CardsShowcase />}
+          {selectedView === "Forms" && <FormsShowcase />}
+        </>
+      )}
     </div>
   );
 }
 
 function ButtonsShowcase() {
   return (
-    <FilledCard className="space-y-4">
+    <section className="space-y-4">
       <h2>Buttons</h2>
       <hr />
       <OutlinedCard className="space-y-4">
@@ -499,11 +369,16 @@ function ButtonsShowcase() {
           </FilledIconButton>
         </Row>
       </OutlinedCard>
-    </FilledCard>
+    </section>
   );
 }
 
 function CardsShowcase() {
+  function copyToClipboard(text) {
+    window.navigator.clipboard.writeText(text);
+    addCopyToClipboardToast('"' + text + '" copied to clipboard !');
+  }
+
   return (
     <section className="space-y-4">
       <h2>Cards</h2>
@@ -553,7 +428,7 @@ function CardsShowcase() {
           </RowBetween>
           <p>A simple outlined card with "current-color" as text-color and border-color.</p>
         </OutlinedCard>
-        <ElevatedCard>
+        <ElevatedCard onClick={() => addToastInfo("Whooo !!")}>
           <RowBetween className="pb-5">
             <h3>Elevated Card</h3>
             <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<ElevatedCard />")}>
@@ -576,6 +451,170 @@ function CardsShowcase() {
           <p>It's like a filled card with a shadow property to add elevation.</p>
         </ElevatedCard>
       </GridCols3>
+    </section>
+  );
+}
+
+function FormsShowcase() {
+  return (
+    <section className="space-y-4">
+      <h2>Forms</h2>
+      <p>
+        It all starts wit a {"<Form />"} component. It just call a function onSubmit to be handled by a javascript
+        funciton. It does not accept a method parameter.
+      </p>
+      <hr />
+      <Form className="space-y-4">
+        <h3>Register form</h3>
+        <hr />
+
+        <Column className="space-y-2 p-2">
+          <h5>Form Inputs</h5>
+          <p>
+            The <strong>{"<FormInput />"}</strong> is by default a text input type. They accept the same properties a
+            normal {"<input />"} does.
+          </p>
+          <OutlinedCard className="space-y-2">
+            <Row className="space-x-2">
+              <FormInput required title="First name" placeholder="John" />
+              <FormInput required title="Last name" placeholder="Doe" />
+              <FormInput title="Username" placeholder="jhondoe" />
+            </Row>
+            <Row className="space-x-2">
+              <FormInput type="date" title="Birthday" />
+              <FormInput required title="Password" type={"password"} placeholder="Password..." />
+              <FormInput
+                required
+                title="Repeat password"
+                disabled
+                messageDisabled="Please type your password before."
+                type={"Confimr Password"}
+                placeholder="Password again..."
+              />
+            </Row>
+          </OutlinedCard>
+        </Column>
+        <hr />
+
+        <Column className="space-y-2 p-2">
+          <h5>Form Select</h5>
+          <p>
+            The <strong>{"<FormSelect />"}</strong> allows you to chose betewen diferents options. They accept the same
+            properties a normal {"<select />"} does.
+          </p>
+          <OutlinedCard className="space-y-2">
+            <Row className="space-x-2">
+              <FormSelect
+                required
+                allowEmpty
+                title="Country"
+                options={[
+                  { value: "fr", label: "France" },
+                  { value: "en", label: "England" },
+                  { value: "es", label: "Spain" },
+                  { value: "it", label: "Italy", disable: true },
+                ]}
+              />
+              <FormSelect
+                allowEmpty
+                title="City"
+                options={[
+                  { value: "paris", label: "Paris" },
+                  { value: "london", label: "London" },
+                ]}
+              />
+              <FormSelect
+                allowEmpty
+                title="Region"
+                disabled
+                messageDisabled="Regions are only available for France."
+                options={[
+                  { value: "idf", label: "Île-de-France" },
+                  { value: "bfc", label: "Bourgogne-Franche-Comté" },
+                ]}
+              />
+            </Row>
+          </OutlinedCard>
+        </Column>
+        <hr />
+
+        <Column className="space-y-2 p-2">
+          <h5>Form Text Area</h5>
+          <p>
+            The <strong>{"<FormTextarea />"}</strong> allows you to type those long long texts. They accept the same
+            properties a normal {"<textarea />"} does.
+          </p>
+          <OutlinedCard className="space-y-2">
+            <Row className="space-x-2">
+              <FormTextarea required title="Biography" maxLength={255} errorMessage={"Please fill in the champ"} />
+              <FormTextarea
+                title="Commentaire"
+                resizable={false}
+                maxLength={255}
+                defaultValue={"A not resizable textarea with a default value"}
+              />
+            </Row>
+          </OutlinedCard>
+        </Column>
+        <hr />
+
+        <Column className="space-y-2 p-2">
+          <h5>Form Checkbox</h5>
+          <p>
+            A simple <strong>{"<Checkbox />"}</strong> with a <strong>{"<ControlledCheckbox />"}</strong> variant that
+            can be controlled by a state.
+          </p>
+          <OutlinedCard className="space-y-2">
+            <Row>
+              <Checkbox />
+              <p>I agree to the terms and conditions</p>
+            </Row>
+            <Row>
+              <Checkbox defaultSelected />
+              <p>I would like to receive promtions emails</p>
+            </Row>
+          </OutlinedCard>
+        </Column>
+        <hr />
+
+        <Column className="space-y-2 p-2">
+          <h5>Form Radio Group</h5>
+          <p>
+            A <strong>{"<RadioGroupPanel />"}</strong> component composed by many{" "}
+            <strong>{"<RadioGroupOption />"}</strong> components.
+          </p>
+          <OutlinedCard className="space-y-2">
+            <RadioGroupPanel title={"Select yours"}>
+              <RadioGroupOption text={"Option 1"} />
+              <RadioGroupOption text={"Option 2"} />
+              <RadioGroupOption text={"Option 3"} />
+            </RadioGroupPanel>
+          </OutlinedCard>
+        </Column>
+        <hr />
+
+        <Column className="space-y-2 p-2">
+          <h5>Form Search Select</h5>
+          <p>
+            A <strong>{"<SearchSelect />"}</strong> component that allows user to input a new value or select an
+            existing one. It can be an unique value or multiple. And the value can be nullable or not.
+          </p>
+          <OutlinedCard className="space-y-2">
+            <Row className="space-x-2">
+              <SearchSelect
+                required
+                isNullable
+                allowCustomValue
+                items={[
+                  { id: 1, label: "Item 1" },
+                  { id: 2, label: "Item 2" },
+                  { id: 3, label: "Item 3", disabled: true },
+                ]}
+              />
+            </Row>
+          </OutlinedCard>
+        </Column>
+      </Form>
     </section>
   );
 }
