@@ -12,6 +12,7 @@ export default function ElevatedCard({ className = "", onClick, disabled, ...pro
 
   return (
     <article
+      {...props}
       onClick={onClick}
       className={"card shadow dark:shadow-light bg-secondary-light dark:bg-secondary-dark " + className}
     >

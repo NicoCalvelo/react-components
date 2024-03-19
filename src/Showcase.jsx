@@ -384,7 +384,7 @@ function CardsShowcase() {
       <h2>Cards</h2>
       <hr />
       <GridCols3 className="gap-2">
-        <FilledCard>
+        <FilledCard onClick={() => addToastInfo("Whooo !!")}>
           <RowBetween className="pb-5">
             <h3>Filled Card</h3>
             <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<FilledCard />")}>
@@ -406,7 +406,7 @@ function CardsShowcase() {
           </RowBetween>
           <p>A simple filled card with "background-color" as background-color and "current-color" as text-color.</p>
         </FilledCard>
-        <OutlinedCard>
+        <OutlinedCard onClick={() => addToastInfo("Whooo !!")}>
           <RowBetween className="pb-5">
             <h3>Outlined Card</h3>
             <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<OutlinedCard />")}>
