@@ -19,8 +19,19 @@ import OutlinedIconButton from "./Buttons/OutlinedIconButton";
 import { addCopyToClipboardToast } from "./Components/Toasts";
 import FloatingActionButton from "./Buttons/FloatingActionButton";
 import RadioGroupPanel, { RadioGroupOption } from "./Forms/RadioGroup";
-import FilledButton, { ErrorFilledButton, InfoFilledButton, SuccessFilledButton, WarningFilledButton } from "./Buttons/FilledButton";
-import OutlinedButton, { ErrorOutlinedButton, InfoOutlinedButton, SuccessOutlinedButton, WarningOutlinedButton } from "./Buttons/OutlinedButton";
+import FilledButton, {
+  ErrorFilledButton,
+  InfoFilledButton,
+  SuccessFilledButton,
+  WarningFilledButton,
+} from "./Buttons/FilledButton";
+import OutlinedButton, {
+  ErrorOutlinedButton,
+  InfoOutlinedButton,
+  SuccessOutlinedButton,
+  WarningOutlinedButton,
+} from "./Buttons/OutlinedButton";
+import TextButton from "./Buttons/TextButton";
 
 export default function Showcase() {
   useEffect(() => {
@@ -50,7 +61,14 @@ export default function Showcase() {
           <Switch defaultActive={localStorage.getItem("dark") === "true"} onChange={changeTheme}>
             {(active) =>
               active ? (
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-6 h-6"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -58,7 +76,14 @@ export default function Showcase() {
                   />
                 </svg>
               ) : (
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                  strokeWidth={1.5}
+                  stroke="currentColor"
+                  className="w-5 h-5"
+                >
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
@@ -69,68 +94,18 @@ export default function Showcase() {
             }
           </Switch>
         </RowBetween>
-        <p className="text-lg">Welcome to the showcase page ! Here you will find a resume of all components in this package !</p>
+        <p className="text-lg">
+          Welcome to the showcase page ! Here you will find a resume of all components in this package !
+        </p>
         <hr />
       </header>
       <ButtonsShowcase />
-      <section className="space-y-4">
-        <h2>Cards</h2>
-        <hr />
-        <p>All cards have the following properties : </p>
-        <ul></ul>
-        <GridCols3 className="gap-2">
-          <FilledCard>
-            <RowBetween className="pb-5">
-              <h3>Filled Card</h3>
-              <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<FilledCard />")}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
-                  />
-                </svg>
-              </OutlinedIconButton>
-            </RowBetween>
-            <p>A simple filled card with "background-color" as background-color and "current-color" as text-color.</p>
-          </FilledCard>
-          <OutlinedCard>
-            <RowBetween className="pb-5">
-              <h3>Outlined Card</h3>
-              <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<OutlinedCard />")}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
-                  />
-                </svg>
-              </OutlinedIconButton>
-            </RowBetween>
-            <p>A simple outlined card with "current-color" as text-color and border-color.</p>
-          </OutlinedCard>
-          <ElevatedCard>
-            <RowBetween className="pb-5">
-              <h3>Elevated Card</h3>
-              <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<ElevatedCard />")}>
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
-                  <path
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                    d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
-                  />
-                </svg>
-              </OutlinedIconButton>
-            </RowBetween>
-            <p>It's like a filled card with a shadow property to add elevation.</p>
-          </ElevatedCard>
-        </GridCols3>
-      </section>
+      <CardsShowcase />
       <FilledCard className="space-y-4">
         <h2>Forms</h2>
         <p>
-          It all starts wit a {"<Form />"} component. It just call a function onSubmit to be handled by a javascript funciton. It does not accept a method
-          parameter.
+          It all starts wit a {"<Form />"} component. It just call a function onSubmit to be handled by a javascript
+          funciton. It does not accept a method parameter.
         </p>
         <hr />
         <Form className="space-y-4">
@@ -140,7 +115,8 @@ export default function Showcase() {
           <Column className="space-y-2 p-2">
             <h5>Form Inputs</h5>
             <p>
-              The <strong>{"<FormInput />"}</strong> is by default a text input type. They accept the same properties a normal {"<input />"} does.
+              The <strong>{"<FormInput />"}</strong> is by default a text input type. They accept the same properties a
+              normal {"<input />"} does.
             </p>
             <OutlinedCard className="space-y-2">
               <Row className="space-x-2">
@@ -167,8 +143,8 @@ export default function Showcase() {
           <Column className="space-y-2 p-2">
             <h5>Form Select</h5>
             <p>
-              The <strong>{"<FormSelect />"}</strong> allows you to chose betewen diferents options. They accept the same properties a normal {"<select />"}{" "}
-              does.
+              The <strong>{"<FormSelect />"}</strong> allows you to chose betewen diferents options. They accept the
+              same properties a normal {"<select />"} does.
             </p>
             <OutlinedCard className="space-y-2">
               <Row className="space-x-2">
@@ -209,13 +185,18 @@ export default function Showcase() {
           <Column className="space-y-2 p-2">
             <h5>Form Text Area</h5>
             <p>
-              The <strong>{"<FormTextarea />"}</strong> allows you to type those long long texts. They accept the same properties a normal {"<textarea />"}{" "}
-              does.
+              The <strong>{"<FormTextarea />"}</strong> allows you to type those long long texts. They accept the same
+              properties a normal {"<textarea />"} does.
             </p>
             <OutlinedCard className="space-y-2">
               <Row className="space-x-2">
                 <FormTextarea required title="Biography" maxLength={255} errorMessage={"Please fill in the champ"} />
-                <FormTextarea title="Commentaire" resizable={false} maxLength={255} defaultValue={"A not resizable textarea with a default value"} />
+                <FormTextarea
+                  title="Commentaire"
+                  resizable={false}
+                  maxLength={255}
+                  defaultValue={"A not resizable textarea with a default value"}
+                />
               </Row>
             </OutlinedCard>
           </Column>
@@ -224,7 +205,8 @@ export default function Showcase() {
           <Column className="space-y-2 p-2">
             <h5>Form Checkbox</h5>
             <p>
-              A simple <strong>{"<Checkbox />"}</strong> with a <strong>{"<ControlledCheckbox />"}</strong> variant that can be controlled by a state.
+              A simple <strong>{"<Checkbox />"}</strong> with a <strong>{"<ControlledCheckbox />"}</strong> variant that
+              can be controlled by a state.
             </p>
             <OutlinedCard className="space-y-2">
               <Row>
@@ -242,7 +224,8 @@ export default function Showcase() {
           <Column className="space-y-2 p-2">
             <h5>Form Radio Group</h5>
             <p>
-              A <strong>{"<RadioGroupPanel />"}</strong> component composed by many <strong>{"<RadioGroupOption />"}</strong> components.
+              A <strong>{"<RadioGroupPanel />"}</strong> component composed by many{" "}
+              <strong>{"<RadioGroupOption />"}</strong> components.
             </p>
             <OutlinedCard className="space-y-2">
               <RadioGroupPanel title={"Select yours"}>
@@ -257,8 +240,8 @@ export default function Showcase() {
           <Column className="space-y-2 p-2">
             <h5>Form Search Select</h5>
             <p>
-              A <strong>{"<SearchSelect />"}</strong> component that allows user to input a new value or select an existing one. It can be an unique value or
-              multiple. And the value can be nullable or not.
+              A <strong>{"<SearchSelect />"}</strong> component that allows user to input a new value or select an
+              existing one. It can be an unique value or multiple. And the value can be nullable or not.
             </p>
             <OutlinedCard className="space-y-2">
               <Row className="space-x-2">
@@ -287,10 +270,18 @@ function ButtonsShowcase() {
       <h2>Buttons</h2>
       <hr />
       <OutlinedCard className="space-y-4">
-        <RowBetween>
-          <h3>Filled Button</h3>
+        <RowBetween className="space-x-4">
+          <h3 className="flex-grow">Filled Button</h3>
+          <div className="bg-primary-color rounded-full px-4 py-1.5 text-xs font-bold">High emphasis</div>
           <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<FilledButton />")}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -302,7 +293,14 @@ function ButtonsShowcase() {
         <Row className="space-x-2 p-2">
           <FilledButton>Filled button</FilledButton>
           <FilledButton hasIcon>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -321,10 +319,18 @@ function ButtonsShowcase() {
         </Row>
       </OutlinedCard>
       <OutlinedCard className="space-y-4">
-        <RowBetween>
-          <h3>Outlined Button</h3>
+        <RowBetween className="space-x-4">
+          <h3 className="flex-grow">Outlined Button</h3>
+          <div className="bg-primary-light rounded-full px-4 py-1.5 text-xs font-medium">Medium emphasis</div>
           <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<OutlinedButton />")}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -351,10 +357,18 @@ function ButtonsShowcase() {
         </Row>
       </OutlinedCard>
       <OutlinedCard className="space-y-4">
-        <RowBetween>
-          <h3>Elevated Button</h3>
+        <RowBetween className="space-x-4">
+          <h3 className="flex-grow">Elevated Button</h3>
+          <div className="bg-primary-light rounded-full px-4 py-1.5 text-xs font-medium">Medium emphasis</div>
           <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<ElevatedButton />")}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -377,11 +391,54 @@ function ButtonsShowcase() {
           </ElevatedButton>
         </Row>
       </OutlinedCard>
+      <OutlinedCard className="space-y-4">
+        <RowBetween className="space-x-4">
+          <h3 className="flex-grow">Text Button</h3>
+          <div className="border-primary-color border rounded-full px-4 py-1.5 text-xs font-medium">Low emphasis</div>
+          <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<TextButton />")}>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
+              <path
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+              />
+            </svg>
+          </OutlinedIconButton>
+        </RowBetween>
+        <Row className="space-x-2 p-2">
+          <TextButton>Text button</TextButton>
+          <TextButton hasIcon>
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
+              <path
+                fillRule="evenodd"
+                d="M15.22 6.268a.75.75 0 0 1 .968-.431l5.942 2.28a.75.75 0 0 1 .431.97l-2.28 5.94a.75.75 0 1 1-1.4-.537l1.63-4.251-1.086.484a11.2 11.2 0 0 0-5.45 5.173.75.75 0 0 1-1.199.19L9 12.312l-6.22 6.22a.75.75 0 0 1-1.06-1.061l6.75-6.75a.75.75 0 0 1 1.06 0l3.606 3.606a12.695 12.695 0 0 1 5.68-4.974l1.086-.483-4.251-1.632a.75.75 0 0 1-.432-.97Z"
+                clipRule="evenodd"
+              />
+            </svg>
+            <p>Text button with icon</p>
+          </TextButton>
+        </Row>
+      </OutlinedCard>
       <OutlinedCard className="space-y-2">
-        <RowBetween>
-          <h3>Floating Action Button</h3>
+        <RowBetween className="space-x-4">
+          <h3 className="flex-grow">Floating Action Button</h3>
+          <div className="bg-primary-color rounded-full px-4 py-1.5 text-xs font-bold">High emphasis</div>
           <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<FloatingActionButton />")}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -400,10 +457,18 @@ function ButtonsShowcase() {
         </Row>
       </OutlinedCard>
       <OutlinedCard className="space-y-2">
-        <RowBetween>
-          <h3>Icon Button</h3>
+        <RowBetween className="space-x-4">
+          <h3 className="flex-grow">Icon Button</h3>
+          <div className="border-primary-color border rounded-full px-4 py-1.5 text-xs font-medium">Low emphasis</div>
           <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<IconButton />")}>
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 24 24"
+              strokeWidth={1.5}
+              stroke="currentColor"
+              className="w-6 h-6"
+            >
               <path
                 strokeLinecap="round"
                 strokeLinejoin="round"
@@ -435,5 +500,82 @@ function ButtonsShowcase() {
         </Row>
       </OutlinedCard>
     </FilledCard>
+  );
+}
+
+function CardsShowcase() {
+  return (
+    <section className="space-y-4">
+      <h2>Cards</h2>
+      <hr />
+      <GridCols3 className="gap-2">
+        <FilledCard>
+          <RowBetween className="pb-5">
+            <h3>Filled Card</h3>
+            <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<FilledCard />")}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                />
+              </svg>
+            </OutlinedIconButton>
+          </RowBetween>
+          <p>A simple filled card with "background-color" as background-color and "current-color" as text-color.</p>
+        </FilledCard>
+        <OutlinedCard>
+          <RowBetween className="pb-5">
+            <h3>Outlined Card</h3>
+            <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<OutlinedCard />")}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                />
+              </svg>
+            </OutlinedIconButton>
+          </RowBetween>
+          <p>A simple outlined card with "current-color" as text-color and border-color.</p>
+        </OutlinedCard>
+        <ElevatedCard>
+          <RowBetween className="pb-5">
+            <h3>Elevated Card</h3>
+            <OutlinedIconButton tooltip="Copy the component" onClick={() => copyToClipboard("<ElevatedCard />")}>
+              <svg
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+                strokeWidth={1.5}
+                stroke="currentColor"
+                className="w-6 h-6"
+              >
+                <path
+                  strokeLinecap="round"
+                  strokeLinejoin="round"
+                  d="M15.666 3.888A2.25 2.25 0 0 0 13.5 2.25h-3c-1.03 0-1.9.693-2.166 1.638m7.332 0c.055.194.084.4.084.612v0a.75.75 0 0 1-.75.75H9a.75.75 0 0 1-.75-.75v0c0-.212.03-.418.084-.612m7.332 0c.646.049 1.288.11 1.927.184 1.1.128 1.907 1.077 1.907 2.185V19.5a2.25 2.25 0 0 1-2.25 2.25H6.75A2.25 2.25 0 0 1 4.5 19.5V6.257c0-1.108.806-2.057 1.907-2.185a48.208 48.208 0 0 1 1.927-.184"
+                />
+              </svg>
+            </OutlinedIconButton>
+          </RowBetween>
+          <p>It's like a filled card with a shadow property to add elevation.</p>
+        </ElevatedCard>
+      </GridCols3>
+    </section>
   );
 }
