@@ -3,7 +3,7 @@ import Switch from "./Forms/Switch";
 import Checkbox from "./Forms/Checkbox";
 import React, { useEffect, useState } from "react";
 import { Column } from "./Layout/Columns";
-import FormInput from "./Forms/FormInput";
+import FormInput, { InputVariant } from "./Forms/FormInput";
 import { GridCols3 } from "./Layout/Grids";
 import FormSelect from "./Forms/FormSelect";
 import FilledCard from "./Cards/FilledCard";
@@ -464,7 +464,7 @@ function FormsShowcase() {
         funciton. It does not accept a method parameter.
       </p>
       <hr />
-      <Form className="space-y-4">
+      <Form className="space-y-4 bg-background-color p-5">
         <h3>Register form</h3>
         <hr />
 
@@ -474,24 +474,21 @@ function FormsShowcase() {
             The <strong>{"<FormInput />"}</strong> is by default a text input type. They accept the same properties a
             normal {"<input />"} does.
           </p>
-          <OutlinedCard className="space-y-2">
-            <Row className="space-x-2">
-              <FormInput required title="First name" placeholder="John" />
-              <FormInput required title="Last name" placeholder="Doe" />
-              <FormInput title="Username" placeholder="jhondoe" />
-            </Row>
-            <Row className="space-x-2">
-              <FormInput type="date" title="Birthday" />
-              <FormInput required title="Password" type={"password"} placeholder="Password..." />
-              <FormInput
-                required
-                title="Repeat password"
-                disabled
-                messageDisabled="Please type your password before."
-                type={"Confimr Password"}
-                placeholder="Password again..."
-              />
-            </Row>
+          <OutlinedCard className="gap-6 grid grid-cols-3">
+            <FormInput required title="First name" placeholder="John" />
+            <FormInput required title="Last name" variant={InputVariant.OUTLINED} placeholder="Doe" />
+            <FormInput title="Username" placeholder="jhondoe" maxLength={15} supportingText={"Max char : 15"}/>
+            <FormInput type="date" title="Birthday" />
+            <FormInput title="Number of brothers" type="number" max={10} min={0} />
+            <FormInput required title="Password" type={"password"} placeholder="Password..." />
+            <FormInput
+              required
+              title="Repeat password"
+              disabled
+              messageDisabled="Please type your password before."
+              type={"Confimr Password"}
+              placeholder="Password again..."
+            />
           </OutlinedCard>
         </Column>
         <hr />

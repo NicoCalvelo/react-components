@@ -1,14 +1,7 @@
 import React from "react";
-export default function Form({ className = "", id, onSubmit, ...props }) {
+export default function Form({ className = "", id, onSubmit, method, action, ...props }) {
   return (
-    <form
-      id={id}
-      className={"" + className}
-      onSubmit={(e) => {
-        e.preventDefault();
-        onSubmit(e);
-      }}
-    >
+    <form id={id} className={"" + className} onSubmit={onSubmit} method={method} action={action}>
       {props.children}
     </form>
   );
