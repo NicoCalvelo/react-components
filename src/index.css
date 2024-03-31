@@ -22,6 +22,12 @@ a {
   cursor: pointer;
 }
 
+select {
+  -moz-appearance:none; /* Firefox */
+  -webkit-appearance:none; /* Safari and Chrome */
+  appearance:none;
+}
+
 h1 {
   font-size: 3rem;
   font-weight: 800;
@@ -106,7 +112,7 @@ label:has(~ textarea:disabled) {
     @apply relative p-4;
   }
   .input {
-    @apply bg-transparent border-text-color focus:border-secondary-color invalid:border-error-color placeholder:text-text-light placeholder:text-opacity-50 placeholder:italic transition-all duration-75 focus:outline-0 focus:ring-1;
+    @apply bg-transparent border-text-color focus:border-secondary-color invalid:border-error-color placeholder:text-text-light dark:placeholder:text-dark-text-light placeholder:text-opacity-50 placeholder:italic transition-all duration-75 focus:outline-0 focus:ring-1;
   }
   .file-input {
     @apply relative file:bg-primary-color file:text-primary-on file:text-sm file:font-semibold file:m-0 file:border-0 file:absolute file:cursor-pointer file:right-10 file:top-0.5 file:px-4 file:py-2.5;

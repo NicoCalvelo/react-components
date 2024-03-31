@@ -33,7 +33,7 @@ export default function FormInput({
         <label
           className={
             `absolute pointer-events-none transition-colors text-xs truncate ${getTitleStyle(variant)}` +
-            (isFocus ? " text-secondary-color font-medium" : " text-text-light")
+            (isFocus ? " text-secondary-color dark:text-secondary-light font-medium" : " text-text-light dark:text-dark-text-light")
           }
           htmlFor={id}
         >
@@ -117,7 +117,7 @@ export default function FormInput({
 
 function getGroupStyle(variant, disabled) {
   if (variant === InputVariant.FILLED) {
-    return " bg-background-dark " + (disabled ? "opacity-50" : "");
+    return " bg-background-dark dark:bg-dark-background-light " + (disabled ? "opacity-50" : "");
   } else if (variant === InputVariant.OUTLINED) {
     return "" + (disabled ? "opacity-50" : "");
   }
@@ -127,7 +127,7 @@ function getTitleStyle(variant) {
   if (variant === InputVariant.FILLED) {
     return " top-1.5 left-2 leading-none ";
   } else if (variant === InputVariant.OUTLINED) {
-    return " -top-2 left-2 px-2 bg-background-color ";
+    return " -top-2 left-2 px-2 bg-background-color dark:bg-dark-background-color ";
   }
 }
 
