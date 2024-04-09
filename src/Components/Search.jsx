@@ -1,7 +1,7 @@
 import React from "react";
 import { Row } from "../Layout/rows";
 
-export default function SearchRounded({ id = "search", className = "", onChange, placeholder = "Rechercher...", showIcon = true }) {
+export default function SearchBar({ id = "search", className = "", onChange, placeholder = "Rechercher...", showIcon = true }) {
   return (
     <Row className={"search-bar relative pl-14 pr-6 space-x-5 rounded-full border transition-colors border-text-light w-full max-w-sm " + className}>
       <input
@@ -23,5 +23,14 @@ export default function SearchRounded({ id = "search", className = "", onChange,
         </svg>
       )}
     </Row>
+  );
+}
+
+// TODO : Remember to add <mark> style in index.css
+export function getHighlightedText(text, highlight) {
+  // Split text on highlight term, include term itself into parts, ignore case
+  const parts = text.split(new RegExp(`(${highlight})`, 'gi'));
+  return parts.map((part, i) =>
+    part.toLowerCase() === highlight.toLowerCase() ? <mark key={i}>{part}</mark> : part
   );
 }

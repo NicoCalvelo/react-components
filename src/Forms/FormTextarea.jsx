@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { Column } from "../Layout/Columns";
 
 export const TextareaVariant = Object.freeze({
@@ -6,10 +6,11 @@ export const TextareaVariant = Object.freeze({
   OUTLINED: "outlined",
 });
 
-export default function FormInput({
+export default function FormTextarea({
   variant = TextareaVariant.FILLED,
   minLength = undefined,
   maxLength = undefined,
+  className = "",
   value,
   setValue,
   title = null,
@@ -22,6 +23,7 @@ export default function FormInput({
   disabled = false,
   messageDisabled,
   resizable = true,
+  autoResize = false,
   rows,
   id,
   type,
@@ -29,8 +31,18 @@ export default function FormInput({
 }) {
   const [isFocus, setFocus] = useState(false);
 
+  function resizeElement(e) {
+    e.target.style.height = "auto";
+    e.target.style.height = e.target.scrollHeight + 5 + "px";
+  }
+  useEffect(() => {
+    if (autoResize) {
+      resizeElement({ target: document.getElementById(id) });
+    }
+  }, [autoResize, id]);
+
   return (
-    <Column className={`relative group ${getGroupStyle(variant, disabled)}`}>
+    <Column className={`relative group ${getGroupStyle(variant, disabled)} ${className}`}>
       <textarea
         id={id}
         {...props}
@@ -41,12 +53,18 @@ export default function FormInput({
         defaultValue={defaultValue}
         onFocus={(e) => setFocus(true)}
         onBlur={(e) => setFocus(false)}
-        className={`input peer ${getInputStyle(variant)}`}
+        className={`input peer !pr-20 !pb-5 ${getInputStyle(variant)}`}
         style={{ resize: resizable ? "both" : "none" }}
         rows={rows}
         placeholder={placeholder}
         value={value}
-        onChange={setValue}
+        onChange={(e) => {
+          setValue(e);
+
+          if (autoResize) {
+            resizeElement(e);
+          }
+        }}
       />
       {(!maxLength || !isFocus) && (
         <svg
@@ -79,7 +97,7 @@ export default function FormInput({
 
 function getGroupStyle(variant, disabled) {
   if (variant === TextareaVariant.FILLED) {
-    return " bg-background-dark dark:bg-dark-background-light " + (disabled ? "opacity-50" : "");
+    return " bg-background-dark rounded-t-lg dark:bg-dark-background-light " + (disabled ? "opacity-50" : "");
   } else if (variant === TextareaVariant.OUTLINED) {
     return "" + (disabled ? "opacity-50" : "");
   }

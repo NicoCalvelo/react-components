@@ -2,16 +2,26 @@ import React from "react";
 import { Tab } from "@headlessui/react";
 import Spinner from "../Components/Spinner";
 
-export default function TabsPanel({ vertical = false, tabs = [{ title: "tab 1", disabled: false }], ...props }) {
+export default function TabsPanel({
+  className = "",
+  vertical = false,
+  tabs = [{ title: "tab 1", disabled: false }],
+  ...props
+}) {
   return (
     <Tab.Group>
-      <div className={"flex flex-1 " + (vertical ? " " : " flex-col ")}>
-        <Tab.List className={"flex border-text-light border-opacity-50 " + (vertical ? " flex-col h-full border-r space-y-2 px-1" : " w-full py-1 border-b space-x-2")}>
+      <div className={"flex flex-1 " + (vertical ? " " : " flex-col ") + className}>
+        <Tab.List
+          className={
+            "flex border-text-light border-opacity-50 " +
+            (vertical ? " flex-col h-full border-r space-y-2 px-1" : " w-full py-1 border-b space-x-2")
+          }
+        >
           {tabs.map((e, k) => (
             <Tab
               className={({ selected }) =>
-                "w-48 flex items-center justify-start px-3 space-x-2 border border-primary-color rounded py-2 text-sm transition-all duration-300 " +
-                (selected ? " text-primary-on bg-primary-color font-semibold" : "  hover:bg-primary-color hover:bg-opacity-10")
+                "w-fit flex items-center justify-start pl-4 pr-6 space-x-2 py-2 transition-all duration-150 " +
+                (selected ? " font-bold" : "  hover:text-primary-color text-sm text-text-light hover:underline")
               }
               key={"tab_" + k}
               disabled={e.disabled}
@@ -21,15 +31,15 @@ export default function TabsPanel({ vertical = false, tabs = [{ title: "tab 1", 
             </Tab>
           ))}
         </Tab.List>
-        <Tab.Panels className="p-2">{props.children}</Tab.Panels>
+        <Tab.Panels>{props.children}</Tab.Panels>
       </div>
     </Tab.Group>
   );
 }
 
-export function TabPanel({ isLoading = false, ...props }) {
+export function TabPanel({ className = "", isLoading = false, ...props }) {
   return (
-    <Tab.Panel>
+    <Tab.Panel className={className}>
       {isLoading && (
         <div className="w-full h-full pt-10">
           <Spinner />

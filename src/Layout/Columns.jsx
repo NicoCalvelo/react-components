@@ -34,11 +34,3 @@ export function ColumnBetween({ className = "", ...props }) {
     </div>
   );
 }
-
-export function ColRow({ className = "", breakpoint = "lg:flex-row", ...props }) {
-  return (
-    <div {...props} className={`flex flex-col ${breakpoint} ${className}`}>
-      {props.children}
-    </div>
-  );
-}

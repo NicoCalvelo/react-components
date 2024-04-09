@@ -10,6 +10,7 @@ export default function FormInput({
   variant = InputVariant.FILLED,
   minLength = undefined,
   maxLength = undefined,
+  className = "",
   value,
   setValue,
   title = null,
@@ -28,12 +29,14 @@ export default function FormInput({
   const [isFocus, setFocus] = useState(false);
 
   return (
-    <Column className={`relative group ${getGroupStyle(variant, disabled)}`}>
+    <Column className={`relative group ${getGroupStyle(variant, disabled)} ${className}`}>
       {title && (
         <label
           className={
             `absolute pointer-events-none transition-colors text-xs truncate ${getTitleStyle(variant)}` +
-            (isFocus ? " text-secondary-color dark:text-secondary-light font-medium" : " text-text-light dark:text-dark-text-light")
+            (isFocus
+              ? " text-secondary-color dark:text-secondary-light font-medium"
+              : " text-text-light dark:text-dark-text-light")
           }
           htmlFor={id}
         >
@@ -50,7 +53,7 @@ export default function FormInput({
         disabled={disabled}
         onFocus={(e) => setFocus(true)}
         onBlur={(e) => setFocus(false)}
-        className={`input peer ${getInputStyle(variant)}` + (type == "file" ? " file-input" : "")}
+        className={`input peer ${getInputStyle(variant, title !== null)}` + (type == "file" ? " file-input" : "")}
         type={type}
         onInvalid={(e) => {
           if (errorMessage) e.target.setCustomValidity(errorMessage);
@@ -117,7 +120,7 @@ export default function FormInput({
 
 function getGroupStyle(variant, disabled) {
   if (variant === InputVariant.FILLED) {
-    return " bg-background-dark dark:bg-dark-background-light " + (disabled ? "opacity-50" : "");
+    return " bg-background-dark rounded-t-lg dark:bg-dark-background-light " + (disabled ? "opacity-50" : "");
   } else if (variant === InputVariant.OUTLINED) {
     return "" + (disabled ? "opacity-50" : "");
   }
@@ -131,10 +134,10 @@ function getTitleStyle(variant) {
   }
 }
 
-function getInputStyle(variant) {
+function getInputStyle(variant, hasTitle) {
   if (variant === InputVariant.FILLED) {
-    return " border-b focus:border pl-4 pr-6 pt-5 pb-1  ";
+    return " border-b focus:border pl-4 pr-6  " + (hasTitle ? "pt-5 pb-1" : " py-3");
   } else if (variant === InputVariant.OUTLINED) {
-    return " border focus:border-2 pl-4 pr-6 pt-3 pb-2.5  ";
+    return " border focus:border-2 pl-4 pr-6 " + (hasTitle ? "pt-3 pb-2.5" : "py-3");
   }
 }
