@@ -1,5 +1,5 @@
 import React from "react";
-import { Row } from "../Layout/rows";
+import { Row } from "../Layout/Rows";
 
 export default function SearchBar({ id = "search", className = "", onChange, placeholder = "Rechercher...", showIcon = true }) {
   return (

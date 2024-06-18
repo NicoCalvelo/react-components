@@ -8,7 +8,7 @@ export default function FilledButton({ className = "", hasIcon = false, type = "
       disabled={disabled}
       type={type}
       {...props}
-      className={`btn transition-colors hover:shadow hover:dark:shadow-dark-text-color/20 ${className} ` + (hasIcon ? " !pl-4 " : " ")}
+      className={`btn transition-all hover:shadow-lg hover:bg-opacity-90 hover:dark:shadow-dark-text-color/20 ${className} ` + (hasIcon ? " !pl-4 " : " ")}
     >
       {props.children}
     </button>

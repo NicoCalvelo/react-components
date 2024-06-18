@@ -5,7 +5,7 @@ export default function OutlinedButton({ className = "", hasIcon = false, type =
     className = "text-primary-color border-primary-color bg-primary-dark dark:text-primary-light dark:border-primary-light dark:bg-primary-light " + className;
   return (
     <button
-      className={`btn border bg-opacity-0 dark:bg-opacity-0 hover:dark:bg-opacity-5 hover:bg-opacity-5 ${className} ` + (hasIcon && " pl-4 ")}
+      className={`btn border transition-all bg-opacity-0 dark:bg-opacity-0 hover:dark:bg-opacity-10 hover:bg-opacity-10 ${className} ` + (hasIcon && " pl-4 ")}
       onClick={onClick}
       disabled={disabled}
       type={type}
