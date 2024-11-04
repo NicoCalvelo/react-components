@@ -1,7 +1,6 @@
-import React, { useState } from "react";
-import { Combobox, Transition } from "@headlessui/react";
+import React, { useEffect, useState } from "react";
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Transition } from "@headlessui/react";
 import { Row } from "../Layout/Rows";
-import Spinner from "../Components/Spinner";
 
 /*
   itemsExample = [
@@ -14,6 +13,7 @@ import Spinner from "../Components/Spinner";
 */
 
 export default function SearchSelect({
+  title,
   className = "",
   items,
   required = false,
@@ -21,12 +21,18 @@ export default function SearchSelect({
   allowCustomValue = false,
   selected,
   setSelected,
-  isNullable = false,
+  supportingText,
   placeholder = "Rechercher...",
+  focusColor = "#2563EB",
 }) {
+  const [isFocus, setFocus] = useState(false);
   const [query, setQuery] = useState("");
-  if (isMulti && allowCustomValue) allowCustomValue = false;
 
+  useEffect(() => {
+    setQuery("");
+  }, [selected]);
+
+  if (isMulti && Array.isArray(selected)) items = [...items, ...selected.filter((item) => !items.find((i) => i.id === item.id))];
   const filteredItems =
     query === ""
       ? items
@@ -35,19 +41,28 @@ export default function SearchSelect({
         });
 
   return (
-    <Combobox value={selected} onChange={setSelected} multiple={isMulti} nullable={isNullable}>
+    <Combobox value={selected} onChange={setSelected} multiple={isMulti}>
       <div className="relative flex items-center">
-        <Combobox.Input
+        {title && (
+          <label
+            className={
+              `absolute pointer-events-none transition-colors text-xs truncate  -top-2 left-2 px-2 bg-background-color dark:bg-background-color ` +
+              (isFocus ? " text-current font-medium" : " text-text-light dark:text-text-light")
+            }
+          >
+            {title}
+          </label>
+        )}
+        <ComboboxInput
           required={required}
           onChange={(event) => setQuery(event.target.value)}
           placeholder={placeholder}
-          displayValue={(item) => (isMulti ? item.map((i) => i?.label).join(", ") : item?.label)}
-          className={
-            "peer py-2 px-4 focus:border w-full focus:border-secondary-color invalid:border-error-color focus:outline-none bg-background-dark border-b border-text-color " +
-            className
-          }
+          onFocus={(e) => setFocus(true)}
+          onBlur={(e) => setFocus(false)}
+          displayValue={(item) => (isMulti ? item?.map((i) => i?.label).join(", ") : item?.label)}
+          className={"peer input !w-full border border-gray-300 rounded-lg pl-2 pr-4 " + (title ? "pt-3 pb-2.5" : "py-1.5") + className}
         />
-        <Combobox.Button className="peer absolute right-0 top-0 h-full w-14 flex items-center justify-center">
+        <ComboboxButton className="peer absolute -right-2 top-0 h-full w-14 flex items-center justify-center">
           <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
             <path
               fillRule="evenodd"
@@ -55,7 +70,7 @@ export default function SearchSelect({
               clipRule="evenodd"
             />
           </svg>
-        </Combobox.Button>
+        </ComboboxButton>
         <i className="fi fi-ss-exclamation pointer-events-none text-sm opacity-0 peer-invalid:opacity-100 absolute right-1 text-error-color" />
         <Transition
           className="absolute w-full left-2 top-12 z-30"
@@ -66,20 +81,21 @@ export default function SearchSelect({
           leaveFrom="transform scale-100 opacity-100"
           leaveTo="transform scale-80 opacity-0"
         >
-          <Combobox.Options className={"border max-h-52 w-5/6 overflow-y-scroll shadow-lg"}>
+          <ComboboxOptions className="max-h-72 w-5/6 overflow-y-auto shadow-lg rounded-xl">
             {filteredItems &&
               filteredItems?.map((item, k) => (
-                <Combobox.Option key={item.label} value={item} disabled={item.disabled}>
+                <ComboboxOption key={item.label} value={item} disabled={item.disabled}>
                   {({ active, selected, disabled }) => (
                     <Row
                       className={
-                        "p-3 ui-disabled:bg-background-dark ui-active:bg-primary-color ui-disabled:text-text-light bg-background-color ui-active:text-primary-on ui-selected:text-primary-color " +
+                        "p-3 ui-disabled:bg-background-dark ui-disabled:text-text-light bg-background-color " +
                         (k === 0 && " ") +
                         " " +
                         ((!allowCustomValue || query === "") && k === filteredItems.length - 1 && " ") +
                         " " +
-                        (!disabled && "hover:bg-primary-color hover:text-primary-on ")
+                        (!disabled && "hover:bg-gray-200 cursor-pointer ")
                       }
+                      style={{ color: selected ? focusColor : "" }}
                     >
                       {selected && (
                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-4 h-4 mr-2">
@@ -93,10 +109,10 @@ export default function SearchSelect({
                       <p className="truncate cursor-default ui-selected:font-semibold">{item.label}</p>
                     </Row>
                   )}
-                </Combobox.Option>
+                </ComboboxOption>
               ))}
-            {allowCustomValue && query !== "" && (
-              <Combobox.Option value={{ id: query, label: query }}>
+            {allowCustomValue && query != "" && query.split(", ")[query.split(", ").length - 1] !== "" && (
+              <ComboboxOption value={{ id: query.split(", ")[query.split(", ").length - 1], label: query.split(", ")[query.split(", ").length - 1] }}>
                 <Row
                   className={
                     "p-3 ui-disabled:bg-background-dark ui-active:bg-primary-color ui-disabled:text-text-light bg-background-color ui-active:text-primary-on ui-selected:text-primary-color " +
@@ -107,14 +123,15 @@ export default function SearchSelect({
                     <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
                   </svg>
                   <p className="truncate cursor-default ui-selected:font-semibold">
-                    "<strong>{query}</strong>"
+                    "<strong>{query.split(", ")[query.split(", ").length - 1]}</strong>"
                   </p>
                 </Row>
-              </Combobox.Option>
+              </ComboboxOption>
             )}
-          </Combobox.Options>
+          </ComboboxOptions>
         </Transition>
       </div>
+      {supportingText && <small className="text-text-light italic px-2 pt-1 text-xs">{supportingText}</small>}
     </Combobox>
   );
 }
