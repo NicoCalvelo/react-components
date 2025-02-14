@@ -1,13 +1,13 @@
 import React, { useState } from "react";
 import { Column } from "../Layout/Columns";
 
-export const InputVariant = Object.freeze({
+export const FormInputVariant = Object.freeze({
   FILLED: "filled",
   OUTLINED: "outlined",
 });
 
 export default function FormInput({
-  variant = InputVariant.FILLED,
+  variant = FormInputVariant.FILLED,
   minLength = undefined,
   maxLength = undefined,
   className = "",
@@ -16,7 +16,7 @@ export default function FormInput({
   title = null,
   required = false,
   defaultValue,
-  placeholder = "",
+  placeholder,
   pattern = undefined,
   errorMessage,
   supportingText,
@@ -29,14 +29,12 @@ export default function FormInput({
   const [isFocus, setFocus] = useState(false);
 
   return (
-    <Column className={`relative group ${getGroupStyle(variant, disabled)} ${className}`}>
+    <Column className={`relative w-fit group ${getGroupStyle(variant, disabled)} ${className}`}>
       {title && (
         <label
           className={
             `absolute pointer-events-none transition-colors text-xs truncate ${getTitleStyle(variant)}` +
-            (isFocus
-              ? " text-secondary-color dark:text-secondary-light font-medium"
-              : " text-text-light dark:text-dark-text-light")
+            (isFocus ? " text-text-light font-medium" : " text-text-light")
           }
           htmlFor={id}
         >
@@ -53,7 +51,10 @@ export default function FormInput({
         disabled={disabled}
         onFocus={(e) => setFocus(true)}
         onBlur={(e) => setFocus(false)}
-        className={`input peer ${getInputStyle(variant, title !== null)}` + (type == "file" ? " file-input" : "")}
+        onClick={(e) => {
+          if (props.onClick) props.onClick(e);
+        }}
+        className={`input !w-full peer text-text-color ${getInputStyle(variant, title !== null)}` + (type == "file" ? " file-input" : "")}
         type={type}
         onInvalid={(e) => {
           if (errorMessage) e.target.setCustomValidity(errorMessage);
@@ -80,11 +81,7 @@ export default function FormInput({
               e.target.classList.add("!ring-error-color");
               e.target.setCustomValidity("Le type de voie ne peut pas dépasser " + maxLength + " caractères.");
               e.target.title = "Le type de voie ne peut pas dépasser " + maxLength + " caractères.";
-            } else if (
-              e.target.value.length <= maxLength &&
-              element &&
-              element.classList.contains("text-error-color")
-            ) {
+            } else if (e.target.value.length <= maxLength && element && element.classList.contains("text-error-color")) {
               element.classList.remove("text-error-color");
               e.target.classList.remove("!ring-error-color");
               e.target.setCustomValidity("");
@@ -99,7 +96,7 @@ export default function FormInput({
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="pointer-events-none text-sm opacity-0 peer-invalid:opacity-100 absolute bottom-1.5 right-1 text-error-color w-5 h-5"
+          className="pointer-events-none text-sm opacity-0 peer-invalid:opacity-100 absolute top-6 right-1 text-error-color w-5 h-5"
         >
           <path
             fillRule="evenodd"
@@ -109,35 +106,35 @@ export default function FormInput({
         </svg>
       )}
       {maxLength && isFocus && (
-        <small className="absolute font-semibold text-error-color bottom-1.5 right-1" id="max_length_text">
+        <small className={"absolute font-semibold top-6 right-1.5 " + (value && value.length > maxLength ?"text-error-color" :"text-text-light")} id="max_length_text">
           {value ? value.length : defaultValue ? defaultValue.length : `max ${maxLength}`}
         </small>
       )}
-      {supportingText && <small className="text-text-light italic absolute left-1 -bottom-5">{supportingText}</small>}
+      {supportingText && <small className="text-text-light italic px-2 pt-1 text-xs">{supportingText}</small>}
     </Column>
   );
 }
 
 function getGroupStyle(variant, disabled) {
-  if (variant === InputVariant.FILLED) {
-    return " bg-background-dark rounded-t-lg dark:bg-dark-background-light " + (disabled ? "opacity-50" : "");
-  } else if (variant === InputVariant.OUTLINED) {
-    return "" + (disabled ? "opacity-50" : "");
+  if (variant === FormInputVariant.FILLED) {
+    return " bg-gray-100 rounded-t-lg";
+  } else if (variant === FormInputVariant.OUTLINED) {
+    return "";
   }
 }
 
 function getTitleStyle(variant) {
-  if (variant === InputVariant.FILLED) {
-    return " top-1.5 left-2 leading-none ";
-  } else if (variant === InputVariant.OUTLINED) {
-    return " -top-2 left-2 px-2 bg-background-color dark:bg-dark-background-color ";
+  if (variant === FormInputVariant.FILLED) {
+    return " top-1 left-2 leading-none ";
+  } else if (variant === FormInputVariant.OUTLINED) {
+    return " -top-2.5 left-2 px-2 bg-background-color ";
   }
 }
 
 function getInputStyle(variant, hasTitle) {
-  if (variant === InputVariant.FILLED) {
-    return " border-b focus:border pl-4 pr-6  " + (hasTitle ? "pt-5 pb-1" : " py-3");
-  } else if (variant === InputVariant.OUTLINED) {
-    return " border focus:border-2 pl-4 pr-6 " + (hasTitle ? "pt-3 pb-2.5" : "py-3");
+  if (variant === FormInputVariant.FILLED) {
+    return " focus:border-b pl-4 pr-6  " + (hasTitle ? "pt-5 pb-1" : " py-3");
+  } else if (variant === FormInputVariant.OUTLINED) {
+    return " rounded-lg border focus:outline-text-light focus:outline-2 pl-4 pr-6 " + (hasTitle ? "pt-3 pb-2.5" : "py-3");
   }
 }

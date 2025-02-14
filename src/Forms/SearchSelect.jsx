@@ -1,6 +1,6 @@
-import React, { useEffect, useState } from "react";
-import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Transition } from "@headlessui/react";
 import { Row } from "../Layout/Rows";
+import React, { useEffect, useMemo, useState } from "react";
+import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions, Transition } from "@headlessui/react";
 
 /*
   itemsExample = [
@@ -24,6 +24,7 @@ export default function SearchSelect({
   supportingText,
   placeholder = "Rechercher...",
   focusColor = "#2563EB",
+  loading = false,
 }) {
   const [isFocus, setFocus] = useState(false);
   const [query, setQuery] = useState("");
@@ -32,48 +33,56 @@ export default function SearchSelect({
     setQuery("");
   }, [selected]);
 
-  if (isMulti && Array.isArray(selected)) items = [...items, ...selected.filter((item) => !items.find((i) => i.id === item.id))];
-  const filteredItems =
-    query === ""
-      ? items
-      : items.filter((item) => {
-          return item.label.toLowerCase().includes(query.toLowerCase());
-        });
+  if (isMulti && Array.isArray(selected) && items) {
+    items = [...items, ...selected.filter((item) => !items.find((i) => i.id === item.id))];
+  }
+
+  const filteredItems = useMemo(() => {
+    if (query === "") return items;
+    const lowerQuery = query.toLowerCase();
+    return items.filter((item) => {
+      const label = item.label || item.value || item.name;
+      return label ? label.toLowerCase().includes(lowerQuery) : false;
+    });
+  }, [query, items]);
 
   return (
     <Combobox value={selected} onChange={setSelected} multiple={isMulti}>
-      <div className="relative flex items-center">
-        {title && (
-          <label
-            className={
-              `absolute pointer-events-none transition-colors text-xs truncate  -top-2 left-2 px-2 bg-background-color dark:bg-background-color ` +
-              (isFocus ? " text-current font-medium" : " text-text-light dark:text-text-light")
-            }
-          >
-            {title}
-          </label>
-        )}
-        <ComboboxInput
-          required={required}
-          onChange={(event) => setQuery(event.target.value)}
-          placeholder={placeholder}
-          onFocus={(e) => setFocus(true)}
-          onBlur={(e) => setFocus(false)}
-          displayValue={(item) => (isMulti ? item?.map((i) => i?.label).join(", ") : item?.label)}
-          className={"peer input !w-full border border-gray-300 rounded-lg pl-2 pr-4 " + (title ? "pt-3 pb-2.5" : "py-1.5") + className}
-        />
-        <ComboboxButton className="peer absolute -right-2 top-0 h-full w-14 flex items-center justify-center">
-          <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-            <path
-              fillRule="evenodd"
-              d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
-              clipRule="evenodd"
-            />
-          </svg>
-        </ComboboxButton>
-        <i className="fi fi-ss-exclamation pointer-events-none text-sm opacity-0 peer-invalid:opacity-100 absolute right-1 text-error-color" />
+      <div className={"relative flex flex-col items-center " + className}>
+        <Row>
+          {title && (
+            <label
+              className={
+                `absolute pointer-events-none transition-colors text-xs truncate  -top-2 left-2 px-2 bg-background-color ` +
+                (isFocus ? " text-current font-medium" : " text-text-light")
+              }
+            >
+              {title}
+            </label>
+          )}
+          <ComboboxInput
+            required={required}
+            onChange={(event) => setQuery(event.target.value)}
+            placeholder={placeholder}
+            onFocus={(e) => setFocus(true)}
+            onBlur={(e) => setFocus(false)}
+            displayValue={(item) => (isMulti ? item?.map((i) => i?.label || i?.value || i?.name).join(", ") : item?.label || item?.value || item?.name)}
+            className={"peer input !w-full border border-gray-300 rounded-lg pl-2 pr-4 " + (title ? "pt-3 pb-2.5" : "py-1.5")}
+          />
+          <ComboboxButton className="peer absolute -right-2 top-0 h-full w-14 flex items-center justify-center">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+              <path
+                fillRule="evenodd"
+                d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
+                clipRule="evenodd"
+              />
+            </svg>
+          </ComboboxButton>
+          <i className="fi fi-ss-exclamation pointer-events-none text-sm opacity-0 peer-invalid:opacity-100 absolute right-1 text-error-color" />
+        </Row>
         <Transition
-          className="absolute w-full left-2 top-12 z-30"
+          show={!loading && isFocus && filteredItems.length > 0}
+          className="absolute z-20 translate-y-8"
           enter="transition duration-100 ease-out"
           enterFrom="transform scale-80 opacity-0"
           enterTo="transform scale-100 opacity-100"
@@ -81,14 +90,14 @@ export default function SearchSelect({
           leaveFrom="transform scale-100 opacity-100"
           leaveTo="transform scale-80 opacity-0"
         >
-          <ComboboxOptions className="max-h-72 w-5/6 overflow-y-auto shadow-lg rounded-xl">
+          <ComboboxOptions className="max-h-64 overflow-y-auto shadow-lg rounded-xl">
             {filteredItems &&
               filteredItems?.map((item, k) => (
-                <ComboboxOption key={item.label} value={item} disabled={item.disabled}>
-                  {({ active, selected, disabled }) => (
+                <ComboboxOption key={item.id} value={item} disabled={item.disabled}>
+                  {({ selected, disabled }) => (
                     <Row
                       className={
-                        "p-3 ui-disabled:bg-background-dark ui-disabled:text-text-light bg-background-color " +
+                        "p-3 pr-16 ui-disabled:bg-background-dark ui-disabled:text-text-light bg-background-color ui-active:bg-gray-100 " +
                         (k === 0 && " ") +
                         " " +
                         ((!allowCustomValue || query === "") && k === filteredItems.length - 1 && " ") +
@@ -106,7 +115,7 @@ export default function SearchSelect({
                           />
                         </svg>
                       )}
-                      <p className="truncate cursor-default ui-selected:font-semibold">{item.label}</p>
+                      <p className="truncate cursor-default ui-selected:font-semibold">{item.label || item.value || item.name}</p>
                     </Row>
                   )}
                 </ComboboxOption>

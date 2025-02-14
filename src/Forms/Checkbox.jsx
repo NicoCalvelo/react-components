@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export default function Checkbox({ className = "", defaultSelected = false, onChange }) {
   const [selected, setSelected] = useState(defaultSelected);
@@ -24,14 +24,14 @@ export function ControlledCheckbox({ className = "", selected, setSelected }) {
 
   return (
     <div
-      className={"w-fit h-fit cursor-pointer rounded-full transition-all duration-100 p-1.5 " + (selected ? "" : "hover:bg-secondary-color hover:bg-opacity-20")}
+      className={"w-fit h-fit cursor-pointer rounded-full transition-all duration-100 p-1.5 " + (selected ? "" : "hover:bg-primary-color hover:bg-opacity-20")}
       onClick={() => setSelected(!selected)}
     >
       <div
         className={
           className +
           " h-6 w-6 rounded p-0.5 border-2 transition-all duration-100 ease-in-out " +
-          (selected ? "bg-secondary-color text-secondary-on border-secondary-dark" : "border-text-light")
+          (selected ? "bg-primary-color text-primary-on border-primary-dark" : "border-text-light")
         }
       >
         {selected && (

@@ -43,6 +43,17 @@ export default function FormTextarea({
 
   return (
     <Column className={`relative group ${getGroupStyle(variant, disabled)} ${className}`}>
+      {title && (
+        <label
+          className={
+            `absolute pointer-events-none transition-colors text-sm truncate ${getTitleStyle(variant)}` +
+            (isFocus ? " text-text-light font-medium" : " text-text-light")
+          }
+          htmlFor={id}
+        >
+          {title}
+        </label>
+      )}
       <textarea
         id={id}
         {...props}
@@ -81,12 +92,7 @@ export default function FormTextarea({
         </svg>
       )}
       {maxLength && isFocus && (
-        <small
-          className={
-            "absolute font-semibold bottom-1.5 right-2 " + (value?.length > maxLength ? "text-error-color" : "")
-          }
-          id="max_length_text"
-        >
+        <small className={"absolute font-semibold bottom-1.5 right-2 " + (value?.length > maxLength ? "text-error-color" : "")} id="max_length_text">
           {value ? value.length : defaultValue ? defaultValue.length : `max ${maxLength}`}
         </small>
       )}
@@ -97,7 +103,7 @@ export default function FormTextarea({
 
 function getGroupStyle(variant, disabled) {
   if (variant === TextareaVariant.FILLED) {
-    return " bg-background-dark rounded-t-lg dark:bg-dark-background-light " + (disabled ? "opacity-50" : "");
+    return " bg-background-dark rounded-t-lg " + (disabled ? "opacity-50" : "");
   } else if (variant === TextareaVariant.OUTLINED) {
     return "" + (disabled ? "opacity-50" : "");
   }
@@ -107,6 +113,14 @@ function getInputStyle(variant) {
   if (variant === TextareaVariant.FILLED) {
     return " border-b focus:border pl-4 pr-6 pt-5 pb-1  ";
   } else if (variant === TextareaVariant.OUTLINED) {
-    return " border focus:border-2 pl-4 pr-6 pt-3 pb-2.5  ";
+    return " rounded-lg border focus:outline-text-light focus:border-2 pl-4 pr-6 pt-4 pb-2.5  ";
+  }
+}
+
+function getTitleStyle(variant) {
+  if (variant === TextareaVariant.FILLED) {
+    return " top-1.5 left-2 leading-none ";
+  } else if (variant === TextareaVariant.OUTLINED) {
+    return " -top-2.5 left-2 px-2 bg-background-color ";
   }
 }
