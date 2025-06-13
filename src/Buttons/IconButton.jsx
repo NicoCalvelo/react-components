@@ -2,25 +2,41 @@ import React from "react";
 
 export default function IconButton({ className = "", type = "button", onClick, disabled = false, tooltip, ...props }) {
   return (
-    <div className="relative">
-      <button
-        onClick={(e) => {
-          e.stopPropagation();
-          if (onClick) onClick(e);
-          else throw new Error("You must provide an onClick function to the IconButton component");
-        }}
-        disabled={disabled}
-        type={type}
-        {...props}
-        className={"peer icon-btn hover:bg-opacity-75 " + className}
-      >
+    <>
+      <button onClick={onClick} disabled={disabled} type={type} {...props} className={`peer icon-btn ${className}`}>
         {props.children}
       </button>
       {tooltip && (
-        <div className="bg-black bg-opacity-60 pointer-events-none opacity-0 peer-hover:opacity-100 absolute z-10 right-5 -top-4 transition-all duration-100 peer-hover:delay-1000 rounded px-4 py-1">
+        <div className="bg-black bg-opacity-60 pointer-events-none opacity-0 peer-hover:opacity-100 origin-right z-20 absolute -translate-x-5 -translate-y-4 transition-all duration-100 peer-hover:delay-1000 rounded px-4 py-1">
           <p className="truncate text-sm text-white font-bold">{tooltip}</p>
         </div>
       )}
-    </div>
+    </>
+  );
+}
+
+export function OutlinedIconButton({ className = "", type = "button", onClick, disable = false, tooltip, ...props }) {
+  return (
+    <IconButton
+      className="border text-secondary-dark border-secondary-color hover:bg-text-light hover:bg-opacity-10"
+      type={type}
+      onClick={onClick}
+      disabled={disable}
+      tooltip={tooltip}
+      {...props}
+    />
+  );
+}
+
+export function FilledIconButton({ className = "", type = "button", onClick, disable = false, tooltip, ...props }) {
+  return (
+    <IconButton
+      className="bg-secondary-color hover:bg-opacity-75 text-secondary-on"
+      type={type}
+      onClick={onClick}
+      disabled={disable}
+      tooltip={tooltip}
+      {...props}
+    />
   );
 }
