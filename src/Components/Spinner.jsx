@@ -1,8 +1,12 @@
 import React from "react";
 
-export default function Spinner({ className = "mx-auto w-8 h-8", ...props }) {
+export default function Spinner({ className = "mx-auto", ...props }) {
+  if (!className.includes("w-") && !className.includes("h-") && !className.includes("size-")) {
+    className = "w-8 h-8 " + className;
+  }
+
   return (
-    <div className={" " + className} role="status" id="spinner">
+    <div className={className} role="status" id="spinner">
       <svg
         aria-hidden="true"
         className={"w-full h-full text-background-dark animate-spin fill-primary-dark"}

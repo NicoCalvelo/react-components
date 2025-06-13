@@ -1,7 +1,7 @@
 import React from "react";
 import { Row } from "../Layout/Rows";
 
-export default function SearchBar({ id = "search", className = "", onChange, placeholder = "Rechercher...", showIcon = true, ...props }) {
+export default function SearchBar({ id = "search", className = "", onChange, placeholder = "Rechercher...", showIcon = true, caseSensitive = false, ...props }) {
   return (
     <Row className={"search-bar has-[:focus]:shadow-inner relative pl-12 pr-6 space-x-5 rounded-full transition-colors border w-full max-w-sm " + className}>
       <input
@@ -9,7 +9,7 @@ export default function SearchBar({ id = "search", className = "", onChange, pla
         placeholder={placeholder}
         id={id}
         autoComplete="off"
-        onChange={(e) => onChange(e.target.value)}
+        onChange={(e) => onChange(caseSensitive ? e.target.value : e.target.value.toLowerCase())}
         className="peer bg-transparent h-full py-4 flex-grow placeholder:italic placeholder-text-light focus:text-text-color placeholder-opacity-50 focus:outline-none"
       />
       {showIcon && (

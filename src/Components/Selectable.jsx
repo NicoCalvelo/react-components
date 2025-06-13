@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 
 export default function Selectable({ className = "", hasIcon = false, defaultSelected = false, onChange, ...props }) {
   const [selected, setSelected] = useState(defaultSelected);
