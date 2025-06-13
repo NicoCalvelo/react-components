@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
 export default function Checkbox({ className = "", defaultSelected = false, onChange }) {
   const [selected, setSelected] = useState(defaultSelected);

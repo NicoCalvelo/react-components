@@ -70,7 +70,7 @@ export default function FormTextarea({
         placeholder={placeholder}
         value={value}
         onChange={(e) => {
-          setValue(e);
+          if (setValue) setValue(e);
 
           if (autoResize) {
             resizeElement(e);

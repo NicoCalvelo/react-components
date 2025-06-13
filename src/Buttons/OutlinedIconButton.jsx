@@ -8,7 +8,7 @@ export default function OutlinedIconButton({ className = "", type = "button", on
         disabled={disable}
         type={type}
         {...props}
-        className={"icon-btn border hover:bg-text-light hover:bg-opacity-10 " + className}
+        className={"icon-btn border text-secondary-dark border-secondary-color hover:bg-text-light hover:bg-opacity-10 " + className}
       >
         {props.children}
       </button>

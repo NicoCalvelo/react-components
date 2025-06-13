@@ -27,7 +27,16 @@ export function Toasts({}) {
     };
   }, [toast]);
 
-  return <div className={"fixed z-50 left-0 right-0 transition-all duration-300 " + (toast ? "bottom-5 opacity-100" : "bottom-0 opacity-0")}>{toast}</div>;
+  return (
+    <div
+      onClick={(e) => {
+        e.stopPropagation();
+      }}
+      className={"fixed z-50 left-0 right-0 transition-all duration-300 pointer-events-none " + (toast ? "bottom-5 opacity-100" : "bottom-0 opacity-0")}
+    >
+      {toast}
+    </div>
+  );
 }
 
 export var setToast;
@@ -37,7 +46,9 @@ export function addToastError(text, waitSeconds = 10) {
   seconds = waitSeconds;
   setToast(
     <div
-      className={"rounded-xl shadow-xl p-5 w-full max-w-3xl flex justify-between font-medium items-center mx-auto bg-error-color text-error-on"}
+      className={
+        "rounded-xl shadow-xl p-5 w-full max-w-3xl flex justify-between pointer-events-auto font-medium items-center mx-auto bg-error-color text-error-on"
+      }
       role="alert"
     >
       <div className="flex items-center space-x-2">
@@ -64,7 +75,9 @@ export function addToastUndoAction(text, waitSeconds = 4) {
     seconds = waitSeconds;
     setToast(
       <div
-        className={"rounded-xl shadow-xl p-5 w-full max-w-3xl flex justify-between space-x-8 font-medium items-center mx-auto bg-warning-color text-warning-on"}
+        className={
+          "rounded-xl shadow-xl p-5 w-full max-w-3xl flex pointer-events-auto justify-between space-x-8 font-medium items-center mx-auto bg-warning-color text-warning-on"
+        }
         role="alert"
       >
         <div className="flex items-center space-x-2">
@@ -99,7 +112,12 @@ export function addToastUndoAction(text, waitSeconds = 4) {
 export function addToastInfo(text, waitSeconds = 6) {
   seconds = waitSeconds;
   setToast(
-    <div className={"rounded-xl shadow-xl p-5 w-full max-w-3xl flex justify-between font-medium items-center mx-auto bg-info-color text-info-on"} role="alert">
+    <div
+      className={
+        "rounded-xl shadow-xl p-5 w-full max-w-3xl flex pointer-events-auto justify-between font-medium items-center mx-auto bg-info-color text-info-on"
+      }
+      role="alert"
+    >
       <div className="flex items-center space-x-2">
         <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
           <path
@@ -123,7 +141,10 @@ export function addToastInfo(text, waitSeconds = 6) {
 export function addToastSuccess(text, waitSeconds = 6) {
   seconds = waitSeconds;
   setToast(
-    <div className={"rounded-xl shadow-xl p-5 w-full max-w-3xl flex justify-between font-medium items-center mx-auto bg-green-600 text-white"} role="alert">
+    <div
+      className={"rounded-xl shadow-xl p-5 w-full max-w-3xl flex pointer-events-auto justify-between font-medium items-center mx-auto bg-green-600 text-white"}
+      role="alert"
+    >
       <div className="flex items-center space-x-2">
         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" className="w-6 h-6">
           <path
@@ -147,7 +168,9 @@ export function addToastWarning(text, waitSeconds = 6) {
   seconds = waitSeconds;
   setToast(
     <div
-      className={"rounded-xl shadow-xl p-5 w-full max-w-3xl flex justify-between font-medium items-center mx-auto bg-warning-color text-warning-on"}
+      className={
+        "rounded-xl shadow-xl p-5 w-full max-w-3xl flex pointer-events-auto justify-between font-medium items-center mx-auto bg-warning-color text-warning-on"
+      }
       role="alert"
     >
       <div className="flex items-center space-x-2">
@@ -174,7 +197,9 @@ export function addCopyToClipboardToast(text, waitSeconds = 5) {
   seconds = waitSeconds;
   setToast(
     <div
-      className={"rounded-xl shadow-xl p-5 w-full max-w-3xl flex justify-between font-medium items-center mx-auto bg-primary-color text-primary-on"}
+      className={
+        "rounded-xl shadow-xl p-5 w-full max-w-3xl flex pointer-events-auto justify-between font-medium items-center mx-auto bg-primary-color text-primary-on"
+      }
       role="alert"
     >
       <div className="flex items-center space-x-2">

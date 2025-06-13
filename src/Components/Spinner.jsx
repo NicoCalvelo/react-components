@@ -2,10 +2,10 @@ import React from "react";
 
 export default function Spinner({ className = "mx-auto w-8 h-8", ...props }) {
   return (
-    <div className={" " + className} role="status">
+    <div className={" " + className} role="status" id="spinner">
       <svg
         aria-hidden="true"
-        className={"w-full h-full text-background-dark animate-spin dark:fill-primary-light fill-primary-dark"}
+        className={"w-full h-full text-background-dark animate-spin fill-primary-dark"}
         viewBox="0 0 100 101"
         fill="none"
         xmlns="http://www.w3.org/2000/svg"

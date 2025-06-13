@@ -15,7 +15,7 @@ export default function TextButton({
       type={type}
       {...props}
       className={
-        `btn text-primary-color disabled:text-opacity-50 dark:text-primary-light hover:bg-gray-700 hover:dark:bg-gray-300 hover:bg-opacity-5 transition-all ${className} ` +
+        `btn text-primary-color disabled:text-opacity-50 hover:bg-gray-700 hover:bg-opacity-5 transition-all ${className} ` +
         (hasIcon ? " !pl-4 " : " ")
       }
     >

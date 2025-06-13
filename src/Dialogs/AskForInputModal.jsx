@@ -1,34 +1,40 @@
-import React, { Fragment, useEffect, useRef, useState } from "react";
-import { Dialog, DialogPanel, Transition, TransitionChild } from "@headlessui/react";
-import OutlinedButton from "../Buttons/OutlinedButton";
 import { RowEnd } from "../Layout/Rows";
 import FormInput from "../Forms/FormInput";
+import FormSelect from "../Forms/FormSelect";
+import FormTextarea from "../Forms/FormTextarea";
+import { addToastError } from "../Components/Toasts";
+import { Fragment, useEffect, useState } from "react";
+import OutlinedButton from "../Buttons/OutlinedButton";
+import { Dialog, DialogPanel, Transition, TransitionChild } from "@headlessui/react";
 
-export default function AskForInputModal({}) {
+export default function AskForInputModal() {
+  const [value, setValue] = useState();
   const [open, setOpen] = useState(false);
-  const [info, setInfo] = useState({ title: "", message: "", inputOptions: {} });
-  const cancelButtonRef = useRef(null);
+  const [info, setInfo] = useState({ title: "", message: "", inputOptions: { type: "input" }, inputType: AskForInputTypes.INPUT });
 
   useEffect(() => {
     setModal = (props) => {
       setInfo(props);
-      if (props?.inputOptions?.defaultValue) setInfo({ ...props, value: props.inputOptions.defaultValue });
+      if (props?.inputOptions?.defaultValue) setValue(props.inputOptions.defaultValue);
       setOpen(true);
     };
-    return () => {};
   }, []);
+
+  const handleCancel = () => {
+    setOpen(false);
+    info.onCancel(false);
+  };
+
+  const handleConfirm = () => {
+    if (info.inputOptions.required && !value) return addToastError("Veuillez remplir le champ requis.");
+
+    setOpen(false);
+    info.onConfirm(value);
+  };
 
   return (
     <Transition show={open} as={Fragment}>
-      <Dialog
-        as="div"
-        className="relative z-40"
-        initialFocus={cancelButtonRef}
-        onClose={() => {
-          setOpen(!open);
-          info.onCancel();
-        }}
-      >
+      <Dialog as="div" className="relative z-40" onClose={handleCancel}>
         <TransitionChild
           as={Fragment}
           enter="ease-out duration-200"
@@ -75,31 +81,16 @@ export default function AskForInputModal({}) {
                   </div>
                 </div>
                 <div className="p-5 mx-auto w-3/4">
-                  <FormInput
-                    {...info.inputOptions}
-                    setValue={(e) => {
-                      setInfo({ ...info, value: e.target.value });
-                    }}
-                  />
+                  {info.inputType === AskForInputTypes.INPUT && <FormInput {...info.inputOptions} setValue={(e) => setValue(e.target.value)} />}
+                  {info.inputType === AskForInputTypes.SELECT && <FormSelect {...info.inputOptions} onChange={(e) => setValue(e.target.value)} />}
+                  {info.inputType === AskForInputTypes.TEXTAREA && <FormTextarea {...info.inputOptions} setValue={(e) => setValue(e.target.value)} />}
                 </div>
               </div>
               <RowEnd className="bg-background-dark px-4 py-3 sm:px-6 space-x-2 mt-5">
-                <OutlinedButton
-                  className="!border-gray-400"
-                  onClick={() => {
-                    setOpen(!open);
-                    info.onCancel(false);
-                  }}
-                >
+                <OutlinedButton className="!border-gray-400" onClick={handleCancel}>
                   {info.textCancelButton}
                 </OutlinedButton>
-                <button
-                  onClick={() => {
-                    setOpen(!open);
-                    info.onConfirm(info.value);
-                  }}
-                  className={"btn bg-secondary-color text-secondary-on"}
-                >
+                <button disabled={info.inputOptions.required && !info.value} onClick={handleConfirm} className="btn bg-secondary-color text-secondary-on">
                   {info.textConfirmButton}
                 </button>
               </RowEnd>
@@ -111,9 +102,29 @@ export default function AskForInputModal({}) {
   );
 }
 
+export const AskForInputTypes = {
+  INPUT: "input",
+  SELECT: "select",
+  TEXTAREA: "textarea",
+};
+
 let setModal;
 
-export function showAskForInputModal(title, message, inputOptions, textConfirmButton = "Confirmer", textCancelButton = "Annuler") {
+export function showAskForInputModal(
+  title,
+  message,
+  inputOptions,
+  inputType = AskForInputTypes.INPUT,
+  textConfirmButton = "Confirmer",
+  textCancelButton = "Annuler"
+) {
+  if (!setModal) {
+    throw new Error("showConfirmationModal is not imported. Make sure to import ConfirmationDialogsProvider.js file in your main index.js or App.js file.");
+  }
+
+  if (Object.values(AskForInputTypes).find((type) => type === inputType) === undefined)
+    throw new Error("Invalid input type provided. Expected one of: " + Object.values(AskForInputTypes).join(", "));
+
   return new Promise((resolve, reject) => {
     setModal({
       title: title,
@@ -121,6 +132,7 @@ export function showAskForInputModal(title, message, inputOptions, textConfirmBu
       textCancelButton: textCancelButton,
       textConfirmButton: textConfirmButton,
       inputOptions: inputOptions,
+      inputType: inputType,
       onConfirm: resolve,
       onCancel: reject,
     });

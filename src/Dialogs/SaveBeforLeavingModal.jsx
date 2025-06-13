@@ -1,8 +1,8 @@
-import { RowEnd } from "../Layout/rows";
+import { RowEnd } from "../Layout/Rows";
 import { useBlocker } from "react-router-dom";
 import React, { Fragment, useRef } from "react";
 import OutlinedButton from "../Buttons/OutlinedButton";
-import { Dialog, Transition } from "@headlessui/react";
+import { Dialog, DialogPanel, Transition, TransitionChild } from "@headlessui/react";
 
 export default function SaveBeforeLeavingModal({ when, pathPattern = undefined }) {
   const cancelButtonRef = useRef(null);
@@ -14,9 +14,9 @@ export default function SaveBeforeLeavingModal({ when, pathPattern = undefined }
   );
 
   return (
-    <Transition.Root show={blocker.state === "blocked"} as={Fragment} key={"blocker_" + (blocker.state === "blocked")}>
+    <Transition show={blocker.state === "blocked"} as={Fragment} key={"blocker_" + (blocker.state === "blocked")}>
       <Dialog as="div" className="absolute z-40" initialFocus={cancelButtonRef} onClose={blocker.reset}>
-        <Transition.Child
+        <TransitionChild
           as={Fragment}
           enter="ease-out duration-200"
           enterFrom="opacity-0"
@@ -26,9 +26,9 @@ export default function SaveBeforeLeavingModal({ when, pathPattern = undefined }
           leaveTo="opacity-0"
         >
           <div className="fixed inset-0 bg-gray-800 bg-opacity-60 transition-opacity" />
-        </Transition.Child>
+        </TransitionChild>
         <div className="fixed inset-0 z-40 overflow-y-auto">
-          <Transition.Child
+          <TransitionChild
             as={Fragment}
             enter="ease-out duration-300"
             enterFrom="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
@@ -37,7 +37,7 @@ export default function SaveBeforeLeavingModal({ when, pathPattern = undefined }
             leaveFrom="opacity-100 translate-y-0 sm:scale-100"
             leaveTo="opacity-0 translate-y-4 sm:translate-y-0 sm:scale-95"
           >
-            <Dialog.Panel className="relative mx-auto transform overflow-hidden rounded-lg bg-background-color text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
+            <DialogPanel className="relative mx-auto transform overflow-hidden rounded-lg bg-background-color text-left shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg">
               <div className="px-4 pb-4 pt-5 sm:p-6 sm:pb-4">
                 <div className="sm:flex sm:items-start">
                   <div className="mx-auto flex h-14 w-14 flex-shrink-0 items-center justify-center rounded-full bg-warning-color bg-opacity-20 sm:mx-0 sm:h-10 sm:w-10">
@@ -72,10 +72,10 @@ export default function SaveBeforeLeavingModal({ when, pathPattern = undefined }
                   Quiter
                 </button>
               </RowEnd>
-            </Dialog.Panel>
-          </Transition.Child>
+            </DialogPanel>
+          </TransitionChild>
         </div>
       </Dialog>
-    </Transition.Root>
+    </Transition>
   );
 }

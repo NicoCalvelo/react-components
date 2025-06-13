@@ -1,11 +1,11 @@
-import { Disclosure, Transition } from "@headlessui/react";
+import { Disclosure, DisclosureButton, DisclosurePanel, Transition } from "@headlessui/react";
 
 export default function DisclosureItem({ className = "", title = "Title of the disclosure", ...props }) {
   return (
     <Disclosure>
-      <Disclosure.Button
+      <DisclosureButton
         className={
-          "flex w-full justify-between rounded-lg bg-secondary-light bg-opacity-10 px-4 py-2 text-left text-sm font-medium text-secondary-color hover:bg-opacity-20 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75 " +
+          "flex w-full justify-between rounded-lg bg-primary-light bg-opacity-10 px-4 py-2 text-left text-sm font-medium text-primary-color hover:bg-opacity-20 focus:outline-none focus-visible:ring focus-visible:ring-purple-500 focus-visible:ring-opacity-75 " +
           className
         }
       >
@@ -20,7 +20,7 @@ export default function DisclosureItem({ className = "", title = "Title of the d
         >
           <path strokeLinecap="round" strokeLinejoin="round" d="M4.5 15.75l7.5-7.5 7.5 7.5" />
         </svg>
-      </Disclosure.Button>
+      </DisclosureButton>
       <Transition
         enter="transition duration-100 ease-out"
         enterFrom="transform scale-95 opacity-0"
@@ -29,7 +29,7 @@ export default function DisclosureItem({ className = "", title = "Title of the d
         leaveFrom="transform scale-100 opacity-100"
         leaveTo="transform scale-95 opacity-0"
       >
-        <Disclosure.Panel className="px-4 pt-2 pb-4 text-sm text-text-color">{props.children}</Disclosure.Panel>
+        <DisclosurePanel className="px-4 pt-2 pb-4 text-sm text-text-color">{props.children}</DisclosurePanel>
       </Transition>
     </Disclosure>
   );

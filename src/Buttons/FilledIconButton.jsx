@@ -9,7 +9,7 @@ export default function FilledIconButton({ className = "", type = "button", onCl
         type={type}
         {...props}
         className={
-          "icon-btn bg-primary-dark hover:bg-opacity-75 text-primary-on dark:bg-primary-light dark:text-primary-dark " +
+          "icon-btn bg-secondary-color hover:bg-opacity-75 text-secondary-on " +
           className
         }
       >

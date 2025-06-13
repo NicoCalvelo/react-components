@@ -1,27 +1,31 @@
-import React from "react";
-import { Tab } from "@headlessui/react";
-import Spinner from "../Components/Spinner";
+import React, { useEffect, useState } from "react";
+import { Tab, TabGroup, TabList, TabPanels } from "@headlessui/react";
 
-export default function TabsPanel({
-  className = "",
-  vertical = false,
-  tabs = [{ title: "tab 1", disabled: false }],
-  ...props
-}) {
+export default function TabsPanel({ className = "", vertical = false, tabs = [{ title: "tab 1", disabled: false }], onChange, ...props }) {
+  const [selectedIndex, setSelectedIndex] = useState(0);
+  const [leftPosition , setLeftPosition] = useState(0);
+  useEffect(() => {
+    let pos = 0;
+    for (let i = 0; i < selectedIndex; i++) {
+      pos += document.querySelectorAll(".tab")[i].offsetWidth;
+    }
+    pos += document.querySelectorAll(".tab")[selectedIndex].offsetWidth / 2 - 16;
+    setLeftPosition(pos);
+  }, [selectedIndex]);
   return (
-    <Tab.Group>
-      <div className={"flex flex-1 " + (vertical ? " " : " flex-col ") + className}>
-        <Tab.List
-          className={
-            "flex border-text-light border-opacity-50 " +
-            (vertical ? " flex-col h-full border-r space-y-2 px-1" : " w-full py-1 border-b space-x-2")
-          }
-        >
+    <TabGroup
+      onChange={(index) => {
+        if (onChange) onChange(index);
+        setSelectedIndex(index);
+      }}
+    >
+      <div className={"flex flex-1 w-full " + (vertical ? " " : " flex-col ") + className}>
+        <TabList className={"relative flex w-full bg-slate-600 rounded text-white " + (vertical ? " flex-col h-full space-y-2 px-1" : " w-full py-1")}>
           {tabs.map((e, k) => (
             <Tab
               className={({ selected }) =>
-                "w-fit flex items-center justify-start pl-4 pr-6 space-x-2 py-2 transition-all duration-150 " +
-                (selected ? " font-bold" : "  hover:text-primary-color text-sm text-text-light hover:underline")
+                "tab flex w-fit items-center justify-center hover:bg-gray-700 rounded transition-all duration-150 px-4 py-2.5 !outline-none focus:outline-none " +
+                (selected ? " font-bold" : "  text-gray-50")
               }
               key={"tab_" + k}
               disabled={e.disabled}
@@ -30,22 +34,13 @@ export default function TabsPanel({
               <p>{e.title}</p>
             </Tab>
           ))}
-        </Tab.List>
-        <Tab.Panels>{props.children}</Tab.Panels>
+          <div
+            className="w-8 h-1 transition-all duration-300 ease-out rounded-full mx-auto absolute bottom-1"
+            style={{ left: leftPosition + "px", backgroundColor: "#" + (props.formColor ?? "ccc") }}
+          ></div>
+        </TabList>
+        <TabPanels>{typeof props.children === "function" ? props.children(selectedIndex) : props.children}</TabPanels>
       </div>
-    </Tab.Group>
-  );
-}
-
-export function TabPanel({ className = "", isLoading = false, ...props }) {
-  return (
-    <Tab.Panel className={className}>
-      {isLoading && (
-        <div className="w-full h-full pt-10">
-          <Spinner />
-        </div>
-      )}
-      {!isLoading && props.children}
-    </Tab.Panel>
+    </TabGroup>
   );
 }

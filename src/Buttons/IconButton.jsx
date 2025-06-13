@@ -4,7 +4,11 @@ export default function IconButton({ className = "", type = "button", onClick, d
   return (
     <div className="relative">
       <button
-        onClick={onClick}
+        onClick={(e) => {
+          e.stopPropagation();
+          if (onClick) onClick(e);
+          else throw new Error("You must provide an onClick function to the IconButton component");
+        }}
         disabled={disabled}
         type={type}
         {...props}

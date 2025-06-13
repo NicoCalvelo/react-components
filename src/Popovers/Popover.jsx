@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Popover, PopoverButton, PopoverPanel, Transition } from "@headlessui/react";
 import { useLocation } from "react-router-dom";
 
@@ -27,7 +27,7 @@ export default function PopOverMenu({ className = "", buttonClassName = "", butt
         leaveFrom="transform scale-100 opacity-100"
         leaveTo="transform scale-90 opacity-0"
       >
-        <PopoverPanel as="ul" className={"absolute top-10 left-0 bg-background-color rounded shadow overflow-clip " + className}>
+        <PopoverPanel as="ul" className={"absolute z-20 top-10 left-0 bg-background-color rounded shadow overflow-clip " + className}>
           {props.children}
         </PopoverPanel>
       </Transition>

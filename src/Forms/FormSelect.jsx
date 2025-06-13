@@ -8,12 +8,14 @@ export const FormSelectVariant = Object.freeze({
 });
 
 export default function FormSelect({
+  className = "",
   variant = FormSelectVariant.FILLED,
   loading = false,
   options,
   allowEmpty = false,
   isMulti = false,
   required = false,
+  value,
   defaultValue,
   onChange,
   title = null,
@@ -51,15 +53,18 @@ export default function FormSelect({
           disabled={disabled}
           onFocus={(e) => setFocus(true)}
           onBlur={(e) => setFocus(false)}
-          className={`input peer !pr-16 ${getInputStyle(variant, title != null)} ` + (placeholder !== "" && !defaultValue ? "!text-gray-400" : "")}
+          className={
+            `input peer !pr-16 ${getInputStyle(variant, title != null)} ` + (placeholder !== "" && !defaultValue ? "!text-gray-400" : "") + " " + className
+          }
           onInvalid={(e) => {
             if (errorMessage) e.target.setCustomValidity(errorMessage);
           }}
           type={type}
           onChange={(e) => {
             if (e.target.classList.contains("!text-gray-400")) e.target.classList.remove("!text-gray-400");
-            onChange(e);
+            if (onChange) onChange(e);
           }}
+          value={value}
           defaultValue={defaultValue}
         >
           {placeholder && (
@@ -69,7 +74,7 @@ export default function FormSelect({
           )}
           {allowEmpty && <option value={undefined} />}
           {options?.map((option, k) => (
-            <option key={"option_" + k} value={option.value} className="text-text-color">
+            <option key={"option_" + k} value={option.value} className={"text-text-color " + (option["bg-color"] ? option["bg-color"] : "")}>
               {option.label}
             </option>
           ))}
@@ -95,7 +100,12 @@ export default function FormSelect({
         </svg>
       )}
       {!loading && (
-        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5 absolute right-2 bottom-2.5 pointer-events-none">
+        <svg
+          xmlns="http://www.w3.org/2000/svg"
+          viewBox="0 0 20 20"
+          fill="currentColor"
+          className={"w-5 h-5 absolute right-2 pointer-events-none " + (title ? "bottom-2.5" : "bottom-3")}
+        >
           <path
             fillRule="evenodd"
             d="M5.22 8.22a.75.75 0 0 1 1.06 0L10 11.94l3.72-3.72a.75.75 0 1 1 1.06 1.06l-4.25 4.25a.75.75 0 0 1-1.06 0L5.22 9.28a.75.75 0 0 1 0-1.06Z"
@@ -126,7 +136,7 @@ function getTitleStyle(variant) {
 
 function getInputStyle(variant, hasTitle) {
   if (variant === FormSelectVariant.FILLED) {
-    return " border-b rounded focus:border pl-4 pr-6 " + (hasTitle ?"pt-5 pb-1" :"py-2 !text-sm");
+    return " border-b rounded focus:border pl-4 pr-6 " + (hasTitle ? "pt-5 pb-1" : "py-2 !text-sm");
   } else if (variant === FormSelectVariant.OUTLINED) {
     return " rounded-lg border focus:outline-2 pl-4 pr-6 pt-3 pb-2.5  ";
   }
