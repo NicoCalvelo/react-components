@@ -1,7 +1,6 @@
 import React, { useState } from "react";
 import Spinner from "../Components/Spinner";
-import { addToastError } from "../Components/Toasts";
-import { useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate, useSearchParams } from "react-router-dom";
 
 export default function DataTable({
   numeration = true,
@@ -20,6 +19,7 @@ export default function DataTable({
 }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const [searchParams, setSearchParams] = useSearchParams();
   const [config, setConfig] = useState({
     sort: {
       column: null,
@@ -32,27 +32,30 @@ export default function DataTable({
     if (!column.sortable) return;
 
     let direction = "asc";
-    if (config.sort.column === column) {
+    if (config.sort.title === column.title) {
       direction = config.sort.direction === "asc" ? "desc" : "asc";
     }
 
-    setConfig({
-      ...config,
+    setConfig((prev) => ({
+      ...prev,
       sort: {
-        column,
+        title: column.title,
+        value: column.value,
         direction,
       },
-    });
+    }));
+
+    if (column.onSort) column.onSort(direction);
   };
 
   const handleSetPage = (page) => {
     if (page < 1) return;
     if (page > Math.ceil(rowsCount / data.length)) return;
 
-    setConfig({
-      ...config,
+    setConfig((prev) => ({
+      ...prev,
       page,
-    });
+    }));
     if (onChangePage) onChangePage(page);
 
     // change search params
@@ -62,7 +65,7 @@ export default function DataTable({
   };
 
   return (
-    <div class={"flex flex-col focus:border-none pb-2 justify-between relative overflow-x-auto sm:rounded-xl bg-white space-y-2 " + className}>
+    <div className={"flex flex-col focus:border-none pb-2 justify-between relative overflow-x-auto sm:rounded-xl bg-white space-y-2 " + className}>
       <table
         className={
           "w-full text-sm text-left rtl:text-right text-gray-500 dark:text-gray-400 " + customStyles?.table + (data?.length === 0 ? " !table-fixed" : "")
@@ -74,11 +77,11 @@ export default function DataTable({
             {columns.map((column, index) => (
               <th
                 key={column.title + index}
-                className={"group py-2 px-3 truncate " + customStyles?.th}
+                className={"group py-2 px-3 truncate align-bottom " + customStyles?.th + (column.rotateTitle ? " h-40 !w-8 !px-0 !pb-3" : "")}
                 onClick={() => handleSort(column)}
-                style={{ width: column.width || "auto" }}
+                style={{ width: column.width || "auto", ...column.style }}
               >
-                <div className="flex items-center space-x-2">
+                <div className={"flex items-center space-x-2 " + (column.rotateTitle ? "transform -rotate-90 w-8" : "")}>
                   <p className="flex-grow">{column.title}</p>
                   {column.sortable && (
                     <svg
@@ -119,10 +122,10 @@ export default function DataTable({
           )}
           {data
             ?.sort((a, b) => {
-              if (!config.sort.column) return 0;
+              if (!config.sort.value) return 0;
 
-              const valueA = config.sort.column.value(a);
-              const valueB = config.sort.column.value(b);
+              const valueA = config.sort.value(a);
+              const valueB = config.sort.value(b);
 
               if (config.sort.direction === "asc") {
                 return valueA > valueB ? 1 : -1;
@@ -144,7 +147,7 @@ export default function DataTable({
               >
                 {numeration && <td className={"pl-3 " + customStyles?.td}>{index + 1 + (config.page - 1) * rowsPerPage}</td>}
                 {columns.map((column, i) => (
-                  <td key={i} className={"pl-3 " + customStyles?.td}>
+                  <td key={i} className={"pl-3 relative " + customStyles?.td}>
                     {column.cell ? column.cell(row, index) : column.value(row, index)}
                   </td>
                 ))}
@@ -153,12 +156,31 @@ export default function DataTable({
         </tbody>
       </table>
       {showFooter && (
-        <div className={"sticky left-0 w-full py-1 px-3 border-t border-gray-200 text-sm " + customStyles?.tfoot}>
-          {!pagination && data && (
-            <div className="flex justify-end w-full py-2">
-              <p>{data.length} éléments affichés</p>
-            </div>
-          )}
+        <div className={"sticky left-0 flex justify-between items-center w-full py-1 px-3 border-t border-gray-200 text-sm " + customStyles?.tfoot}>
+          <div className="flex flex-grow space-x-2 items-center">
+            <select
+              className="border border-gray-100 rounded-md p-1 text-center text-sm"
+              value={rowsPerPage}
+              onChange={(e) => {
+                handleSetPage(1);
+                localStorage.setItem("limit", e.target.value);
+                setSearchParams((params) => {
+                  params.set("limit", e.target.value);
+                  return params;
+                });
+              }}
+            >
+              {[5, 15, 25, 50, 100].map((value) => {
+                const isSelected = (searchParams.get("limit") || localStorage.getItem("limit") || "15") === value.toString();
+                return (
+                  <option key={value} value={value} selected={isSelected}>
+                    {isSelected && data?.length < value ? data?.length : value}
+                  </option>
+                );
+              })}
+            </select>
+            <p>éléments affichés</p>
+          </div>
           {pagination && (
             <div className="flex items-center justify-end space-x-5 text-sm">
               <button
