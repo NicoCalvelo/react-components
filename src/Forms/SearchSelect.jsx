@@ -1,11 +1,23 @@
 import { Row } from "../Layout/Rows";
 import Spinner from "../Components/Spinner";
-import React, { useEffect, useMemo, useState } from "react";
+import React, { useEffect, useMemo, useState, useCallback, useRef } from "react";
 import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOptions } from "@headlessui/react";
+import { getHighlightedText } from "../Components/Search";
+
+export const SearchSelectVariant = Object.freeze({
+  OUTLINED: "outlined",
+  FILLED: "filled",
+});
+
+export const SearchSelectSize = Object.freeze({
+  SMALL: "small",
+  MEDIUM: "medium",
+  LARGE: "large",
+});
 
 /*
   itemsExample = [
-      { id: 1, label: "Durward Reynolds", disabled: false },
+      { id: 1, label: "Durward Reynolds", disabled: false, description: "Optional description" },
       { id: 2, label: "Kenton Towne", disabled: false },
       { id: 3, label: "Therese Wunsch", disabled: false },
       { id: 4, label: "Benedict Kessler", disabled: true },
@@ -16,56 +28,368 @@ import { Combobox, ComboboxButton, ComboboxInput, ComboboxOption, ComboboxOption
 export default function SearchSelect({
   title,
   className = "",
-  items,
+  items = [],
   isMulti = false,
   allowCustomValue = false,
   selected,
   setSelected,
   supportingText,
+  errorMessage,
   placeholder = "Rechercher...",
   loading = false,
+  disabled = false,
+  required = false,
+  variant = SearchSelectVariant.OUTLINED,
+  size = SearchSelectSize.MEDIUM,
+  maxResults = 25,
+  minQueryLength = 0,
+  debounceMs = 150,
+  clearable = true,
+  id,
+  name,
+  onFocus,
+  onBlur,
+  onQueryChange,
+  filterFunction,
+  displayFunction,
+  noOptionsMessage = "Aucune option trouvée",
+  loadingMessage = "Chargement...",
+  customValuePrefix = "Ajouter",
+  ...props
 }) {
   const [query, setQuery] = useState("");
+  const [isFocused, setIsFocused] = useState(false);
+  const [currentError, setCurrentError] = useState(null);
+  const [debouncedQuery, setDebouncedQuery] = useState("");
+  const inputRef = useRef(null);
+  const debounceRef = useRef(null);
 
+  // ID unique pour le composant
+  const selectId = useMemo(() => {
+    return id || `search-select-${Math.random().toString(36).substring(2, 11)}`;
+  }, [id]);
+
+  // IDs pour les éléments associés
+  const helperId = useMemo(() => `${selectId}-helper`, [selectId]);
+  const errorId = useMemo(() => `${selectId}-error`, [selectId]);
+
+  // Validation des items
+  const validatedItems = useMemo(() => {
+    if (!Array.isArray(items)) {
+      console.warn('SearchSelect: items should be an array');
+      return [];
+    }
+
+    return items.filter(item => {
+      if (!item || typeof item !== 'object') {
+        console.warn('SearchSelect: Each item should be an object');
+        return false;
+      }
+      if (item.id === undefined) {
+        console.warn('SearchSelect: Each item should have an "id" property');
+        return false;
+      }
+      if (!item.label && !item.value && !item.name) {
+        console.warn('SearchSelect: Each item should have a "label", "value", or "name" property');
+        return false;
+      }
+      return true;
+    }).map(item => ({
+      id: item.id,
+      label: item.label || item.value || item.name,
+      disabled: item.disabled || false,
+      description: item.description,
+      ...item
+    }));
+  }, [items]);
+
+  // Debounce de la query
+  useEffect(() => {
+    if (debounceRef.current) {
+      clearTimeout(debounceRef.current);
+    }
+    
+    debounceRef.current = setTimeout(() => {
+      setDebouncedQuery(query);
+      if (onQueryChange) {
+        onQueryChange(query);
+      }
+    }, debounceMs);
+
+    return () => {
+      if (debounceRef.current) {
+        clearTimeout(debounceRef.current);
+      }
+    };
+  }, [query, debounceMs, onQueryChange]);
+
+  // Reset query quand selected change
   useEffect(() => {
     setQuery("");
+    setCurrentError(null);
   }, [selected]);
 
-  if (isMulti && Array.isArray(selected) && items) {
-    items = [...items, ...selected.filter((item) => !items.find((i) => i.id === item.id))];
-  }
+  // Fonction d'affichage personnalisable
+  const getDisplayValue = useCallback((item) => {
+    if (loading) return "";
+    if (!item) return "";
+    
+    if (displayFunction) {
+      return displayFunction(item);
+    }
+
+    if (isMulti && Array.isArray(item)) {
+      return item.map(i => i?.label || i?.value || i?.name).join(", ");
+    }
+    
+    return item?.label || item?.value || item?.name || "";
+  }, [loading, isMulti, displayFunction]);
+
+  // Fonction de filtrage personnalisable
+  const getFilteredItems = useCallback(() => {
+    if (loading) return [];
+    if (debouncedQuery.length < minQueryLength) {
+      return validatedItems.slice(0, maxResults);
+    }
+
+    if (filterFunction) {
+      return filterFunction(validatedItems, debouncedQuery).slice(0, maxResults);
+    }
+
+    const lowerQuery = debouncedQuery.toLowerCase();
+    const filtered = validatedItems.filter(item => {
+      const searchText = `${item.label} ${item.description || ""}`.toLowerCase();
+      return searchText.includes(lowerQuery);
+    });
+
+    return filtered.slice(0, maxResults);
+  }, [validatedItems, debouncedQuery, minQueryLength, maxResults, loading, filterFunction]);
+
+  // Ajouter les items sélectionnés si multi
+  const allItems = useMemo(() => {
+    if (isMulti && Array.isArray(selected) && selected.length > 0) {
+      const selectedItems = selected.filter(item => 
+        !validatedItems.find(i => i.id === item.id)
+      );
+      return [...validatedItems, ...selectedItems];
+    }
+    return validatedItems;
+  }, [validatedItems, selected, isMulti]);
 
   const filteredItems = useMemo(() => {
-    if (query === "" || loading) return items;
-    const lowerQuery = query.toLowerCase();
-    return items.filter((item) => {
-      const label = item.label || item.value || item.name;
-      return label ? label.toLowerCase().includes(lowerQuery) : false;
+    if (loading) return [];
+    if (debouncedQuery.length < minQueryLength) {
+      return allItems.slice(0, maxResults);
+    }
+
+    if (filterFunction) {
+      return filterFunction(allItems, debouncedQuery).slice(0, maxResults);
+    }
+
+    const lowerQuery = debouncedQuery.toLowerCase();
+    const filtered = allItems.filter(item => {
+      const searchText = `${item.label} ${item.description || ""}`.toLowerCase();
+      return searchText.includes(lowerQuery);
     });
-  }, [query, items]);
+
+    return filtered.slice(0, maxResults);
+  }, [allItems, debouncedQuery, minQueryLength, maxResults, loading, filterFunction]);
+
+  // Gestion des événements
+  const handleQueryChange = useCallback((event) => {
+    const newQuery = event.target.value;
+    setQuery(newQuery);
+    setCurrentError(null);
+  }, []);
+
+  const handleFocus = useCallback((event) => {
+    setIsFocused(true);
+    if (onFocus) {
+      onFocus(event);
+    }
+  }, [onFocus]);
+
+  const handleBlur = useCallback((event) => {
+    setIsFocused(false);
+    if (onBlur) {
+      onBlur(event);
+    }
+  }, [onBlur]);
+
+  const handleSelectionChange = useCallback((newValue) => {
+    setCurrentError(null);
+    
+    // Validation required
+    if (required && (!newValue || (Array.isArray(newValue) && newValue.length === 0))) {
+      const errorMsg = "Veuillez sélectionner une option.";
+      setCurrentError(errorMsg);
+    }
+
+    // Appel du callback parent
+    if (setSelected) {
+      try {
+        setSelected(newValue);
+      } catch (error) {
+        console.error('Error in SearchSelect setSelected callback:', error);
+        setCurrentError("Erreur lors de la sélection.");
+      }
+    }
+  }, [setSelected, required]);
+
+  const handleClear = useCallback((event) => {
+    event.stopPropagation();
+    setQuery("");
+    handleSelectionChange(isMulti ? [] : null);
+    if (inputRef.current) {
+      inputRef.current.focus();
+    }
+  }, [isMulti, handleSelectionChange]);
+
+  // Messages d'aide/erreur
+  const helperMessage = useMemo(() => {
+    if (currentError || errorMessage) return currentError || errorMessage;
+    return supportingText;
+  }, [currentError, errorMessage, supportingText]);
+
+  const hasError = Boolean(currentError || errorMessage);
+
+  // Classes CSS basées sur la variante et la taille
+  const getInputClasses = useCallback(() => {
+    let baseClasses = "peer input !w-full transition-all duration-200";
+    
+    // Taille
+    switch (size) {
+      case SearchSelectSize.SMALL:
+        baseClasses += title ? " pt-2.5 pb-1.5 px-2 text-sm" : " py-1.5 px-2 text-sm";
+        break;
+      case SearchSelectSize.LARGE:
+        baseClasses += title ? " pt-4 pb-3 px-3 text-lg" : " py-3 px-3 text-lg";
+        break;
+      default: // MEDIUM
+        baseClasses += title ? " pt-3 pb-2.5 px-2" : " py-2 px-2";
+    }
+
+    // Variante
+    switch (variant) {
+      case SearchSelectVariant.FILLED:
+        baseClasses += " !border-0 !border-b-2 !rounded-t-lg !rounded-b-none bg-gray-100";
+        if (hasError) {
+          baseClasses += " !border-red-500";
+        } else if (isFocused) {
+          baseClasses += " !border-primary-color";
+        } else {
+          baseClasses += " !border-gray-400";
+        }
+        break;
+      default: // OUTLINED
+        baseClasses += " border rounded-lg";
+        if (hasError) {
+          baseClasses += " !border-red-500 !ring-red-500";
+        } else if (isFocused) {
+          baseClasses += " !border-primary-color !ring-primary-color";
+        } else {
+          baseClasses += " border-gray-300";
+        }
+    }
+
+    // État disabled
+    if (disabled) {
+      baseClasses += " opacity-50 cursor-not-allowed";
+    }
+
+    return baseClasses;
+  }, [variant, size, title, hasError, isFocused, disabled]);
+
+  const getLabelClasses = useCallback(() => {
+    let baseClasses = "absolute pointer-events-none transition-all duration-200 text-xs truncate";
+    
+    if (variant === SearchSelectVariant.FILLED) {
+      baseClasses += " top-1 left-2";
+    } else {
+      baseClasses += " -top-2 left-2 px-2 bg-background-color";
+    }
+
+    if (hasError) {
+      baseClasses += " text-red-600";
+    } else if (isFocused) {
+      baseClasses += " text-primary-color font-medium";
+    } else {
+      baseClasses += " text-text-light";
+    }
+
+    if (required) {
+      baseClasses += " after:content-['*'] after:text-red-500 after:ml-1";
+    }
+
+    return baseClasses;
+  }, [variant, hasError, isFocused, required]);
+
+  // Valeur à afficher pour l'option custom
+  const customValueQuery = useMemo(() => {
+    if (!allowCustomValue || !query.trim()) return "";
+    return isMulti ? query.split(", ").pop()?.trim() : query.trim();
+  }, [allowCustomValue, query, isMulti]);
+
+  const shouldShowCustomOption = useMemo(() => {
+    return allowCustomValue && 
+           customValueQuery && 
+           !filteredItems.find(item => 
+             (item.label || "").toLowerCase() === customValueQuery.toLowerCase()
+           );
+  }, [allowCustomValue, customValueQuery, filteredItems]);
 
   return (
-    <Combobox value={selected} onChange={setSelected} multiple={isMulti} onClose={() => setQuery("")}>
-      <div className={"flex flex-col items-center " + className}>
-        <Row className="relative">
+    <Combobox 
+      value={selected} 
+      onChange={handleSelectionChange} 
+      multiple={isMulti} 
+      onClose={() => setQuery("")}
+      disabled={disabled}
+      name={name}
+      {...props}
+    >
+      <div className={`flex flex-col relative ${disabled ? "opacity-50" : ""} ${className}`}>
+        <div className="relative">
           {title && (
-            <label
-              className={`absolute pointer-events-none transition-colors text-xs truncate -top-2 left-2 px-2 bg-background-color text-text-light peer-focus:text-current peer-focus:font-medium`}
-            >
+            <label className={getLabelClasses()}>
               {title}
             </label>
           )}
+          
           <ComboboxInput
-            onChange={(event) => setQuery(event.target.value)}
+            ref={inputRef}
+            id={selectId}
+            onChange={handleQueryChange}
+            onFocus={handleFocus}
+            onBlur={handleBlur}
             placeholder={placeholder}
-            displayValue={(item) =>
-              loading ? undefined : isMulti ? item?.map((i) => i?.label || i?.value || i?.name).join(", ") : item?.label || item?.value || item?.name
-            }
-            className={"peer input !w-full border border-gray-300 rounded-lg pl-2 pr-10 " + (title ? "pt-3 pb-2.5" : "py-2")}
+            displayValue={getDisplayValue}
+            className={getInputClasses()}
+            style={{ paddingRight: clearable && selected ? "4rem" : "2.5rem" }}
+            aria-describedby={helperMessage ? helperId : undefined}
+            aria-invalid={hasError}
+            aria-required={required}
+            autoComplete="off"
           />
-          {!loading && (
-            <ComboboxButton className="peer absolute -right-2 top-0 h-full w-14 flex items-center justify-center">
-              <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
+          
+          {/* Bouton clear */}
+          {clearable && selected && !disabled && (
+            <button
+              type="button"
+              onClick={handleClear}
+              className="absolute right-8 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors"
+              aria-label="Effacer la sélection"
+            >
+              <svg className="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+              </svg>
+            </button>
+          )}
+          
+          {/* Bouton dropdown ou spinner */}
+          {!loading ? (
+            <ComboboxButton className="absolute right-2 top-1/2 transform -translate-y-1/2 p-1 text-gray-400 hover:text-gray-600 transition-colors">
+              <svg className="w-5 h-5" viewBox="0 0 20 20" fill="currentColor" aria-hidden="true">
                 <path
                   fillRule="evenodd"
                   d="M5.23 7.21a.75.75 0 011.06.02L10 11.168l3.71-3.938a.75.75 0 111.08 1.04l-4.25 4.5a.75.75 0 01-1.08 0l-4.25-4.5a.75.75 0 01.02-1.06z"
@@ -73,51 +397,152 @@ export default function SearchSelect({
                 />
               </svg>
             </ComboboxButton>
+          ) : (
+            <div className="absolute right-2 top-1/2 transform -translate-y-1/2">
+              <Spinner className="w-4 h-4" />
+            </div>
           )}
-          {loading && <Spinner className="w-4 h-4 absolute right-2" />}
-          <i className="fi fi-ss-exclamation pointer-events-none text-sm opacity-0 peer-invalid:opacity-100 absolute right-1 text-error-color" />
-        </Row>
-        {supportingText && <small className="text-text-light italic px-2 pt-1 text-xs">{supportingText}</small>}
-        <ComboboxOptions className="absolute z-20 translate-y-8 max-h-64 max-w-sm w-full overflow-y-auto shadow-lg rounded-xl">
-          {filteredItems &&
-            filteredItems?.map((item, k) => (
-              <ComboboxOption
-                key={item.id + "_" + selected?.id}
-                value={item}
-                disabled={item.disabled}
-                className="flex items-center max-w-sm p-3 pr-16 ui-disabled:bg-background-dark ui-disabled:text-text-light data-[selected]:text-primary-color ui-selected:text-primary-color bg-background-color ui-active:bg-gray-100 ui-not-disabled:hover:bg-gray-200 ui-not-disabled:cursor-pointer"
-              >
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  viewBox="0 0 20 20"
-                  fill="currentColor"
-                  className="w-4 h-4 ui-selected:mr-2 hidden data-[selected]:block ui-selected:block"
-                >
-                  <path
-                    fillRule="evenodd"
-                    d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
-                    clipRule="evenodd"
-                  />
-                </svg>
-                <p className="cursor-default text-wrap ui-selected:font-semibold">{item.label || item.value || item.name}</p>
-              </ComboboxOption>
-            ))}
-          {allowCustomValue && query != "" && query.split(", ")[query.split(", ").length - 1] !== "" && (
-            <ComboboxOption value={{ id: query.split(", ")[query.split(", ").length - 1], label: query.split(", ")[query.split(", ").length - 1] }}>
-              <Row
-                className={
-                  "p-3 ui-disabled:bg-background-dark ui-active:bg-primary-color ui-disabled:text-text-light bg-background-color ui-active:text-primary-on ui-selected:text-primary-color " +
-                  (filteredItems.length === 0 && "rounded-t-lg")
-                }
-              >
-                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-5 h-5 mr-1">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
-                </svg>
-                <p className="truncate cursor-default ui-selected:font-semibold">
-                  "<strong>{query.split(", ")[query.split(", ").length - 1]}</strong>"
-                </p>
-              </Row>
-            </ComboboxOption>
+          
+          {/* Icône d'erreur */}
+          {hasError && (
+            <svg 
+              className="absolute right-12 top-1/2 transform -translate-y-1/2 w-4 h-4 text-red-500"
+              fill="currentColor" 
+              viewBox="0 0 20 20"
+              aria-hidden="true"
+            >
+              <path 
+                fillRule="evenodd" 
+                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" 
+                clipRule="evenodd" 
+              />
+            </svg>
+          )}
+        </div>
+
+        {/* Message d'aide/erreur */}
+        {helperMessage && (
+          <div 
+            id={hasError ? errorId : helperId}
+            className={`text-xs mt-1 px-2 ${
+              hasError 
+                ? "text-red-600 flex items-center" 
+                : "text-gray-600 italic"
+            }`}
+            role={hasError ? "alert" : undefined}
+            aria-live={hasError ? "polite" : undefined}
+          >
+            {hasError && (
+              <svg className="w-3 h-3 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+                <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+              </svg>
+            )}
+            {helperMessage}
+          </div>
+        )}
+
+        {/* Options dropdown */}
+        <ComboboxOptions className="absolute z-50 mt-1 max-h-60 w-full overflow-auto rounded-md bg-white py-1 text-base shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none">
+          {loading ? (
+            <div className="flex items-center justify-center py-4 text-gray-500">
+              <Spinner className="w-4 h-4 mr-2" />
+              {loadingMessage}
+            </div>
+          ) : (
+            <>
+              {filteredItems.length === 0 && !shouldShowCustomOption ? (
+                <div className="py-3 px-4 text-gray-500 text-center">
+                  {debouncedQuery.length < minQueryLength 
+                    ? `Tapez au moins ${minQueryLength} caractères pour rechercher`
+                    : noOptionsMessage
+                  }
+                </div>
+              ) : (
+                <>
+                  {filteredItems.map((item, index) => (
+                    <ComboboxOption
+                      key={`${item.id}-${index}`}
+                      value={item}
+                      disabled={item.disabled}
+                      className={({ active, selected }) => 
+                        `relative cursor-pointer select-none py-2 px-4 transition-colors ${
+                          active 
+                            ? "bg-primary-color text-white" 
+                            : "text-gray-900"
+                        } ${item.disabled ? "opacity-50 cursor-not-allowed" : ""}`
+                      }
+                    >
+                      {({ active, selected }) => (
+                        <div className="flex items-start space-x-3">
+                          {/* Icône de sélection */}
+                          <div className="flex-shrink-0 w-5 h-5 flex items-center justify-center">
+                            {selected && (
+                              <svg 
+                                className="w-4 h-4" 
+                                fill="currentColor" 
+                                viewBox="0 0 20 20"
+                                aria-hidden="true"
+                              >
+                                <path
+                                  fillRule="evenodd"
+                                  d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z"
+                                  clipRule="evenodd"
+                                />
+                              </svg>
+                            )}
+                          </div>
+                          
+                          {/* Contenu de l'option */}
+                          <div className="flex-grow min-w-0">
+                            <div className={`block truncate ${selected ? "font-semibold" : ""}`}>
+                              {getHighlightedText(item.label, debouncedQuery)}
+                            </div>
+                            {item.description && (
+                              <div className={`text-sm mt-1 ${active ? "text-gray-200" : "text-gray-500"}`}>
+                                {item.description}
+                              </div>
+                            )}
+                          </div>
+                        </div>
+                      )}
+                    </ComboboxOption>
+                  ))}
+                  
+                  {/* Option pour valeur personnalisée */}
+                  {shouldShowCustomOption && (
+                    <ComboboxOption 
+                      value={{ 
+                        id: customValueQuery, 
+                        label: customValueQuery,
+                        isCustom: true
+                      }}
+                      className={({ active }) => 
+                        `relative cursor-pointer select-none py-2 px-4 border-t border-gray-200 transition-colors ${
+                          active ? "bg-primary-color text-white" : "text-gray-900"
+                        }`
+                      }
+                    >
+                      {({ active }) => (
+                        <div className="flex items-center space-x-3">
+                          <svg 
+                            className="w-4 h-4 flex-shrink-0" 
+                            fill="none" 
+                            stroke="currentColor" 
+                            viewBox="0 0 24 24"
+                            aria-hidden="true"
+                          >
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M12 6v6m0 0v6m0-6h6m-6 0H6" />
+                          </svg>
+                          <span>
+                            {customValuePrefix} "<strong>{customValueQuery}</strong>"
+                          </span>
+                        </div>
+                      )}
+                    </ComboboxOption>
+                  )}
+                </>
+              )}
+            </>
           )}
         </ComboboxOptions>
       </div>

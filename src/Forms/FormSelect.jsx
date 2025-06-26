@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useCallback, useMemo, useRef } from "react";
 import { Column } from "../Layout/Columns";
 import Spinner from "../Components/Spinner";
 
@@ -29,68 +29,168 @@ export default function FormSelect({
   ...props
 }) {
   const [isFocus, setFocus] = useState(false);
+  const [currentError, setCurrentError] = useState(null);
+  const selectRef = useRef(null);
+
+  // ID unique pour le select
+  const selectId = useMemo(() => {
+    return id || `select-${Math.random().toString(36).substring(2, 11)}`;
+  }, [id]);
+
+  // ID pour les éléments associés
+  const helperId = useMemo(() => `${selectId}-helper`, [selectId]);
+
+  // Validation des options
+  const validOptions = useMemo(() => {
+    if (!options || !Array.isArray(options)) {
+      console.warn('FormSelect: options should be an array');
+      return [];
+    }
+    return options.filter(option => option && typeof option === 'object');
+  }, [options]);
+
+  // Vérification si une valeur est sélectionnée
+  const hasSelection = useMemo(() => {
+    return value !== undefined && value !== null && value !== '';
+  }, [value]);
+
+  // Gestion du focus avec callback optimisé
+  const handleFocus = useCallback((e) => {
+    setFocus(true);
+    if (props.onFocus) {
+      props.onFocus(e);
+    }
+  }, [props.onFocus]);
+
+  const handleBlur = useCallback((e) => {
+    setFocus(false);
+    if (props.onBlur) {
+      props.onBlur(e);
+    }
+  }, [props.onBlur]);
+
+  // Gestion des erreurs personnalisées
+  const handleInvalid = useCallback((e) => {
+    if (errorMessage) {
+      e.target.setCustomValidity(errorMessage);
+      setCurrentError(errorMessage);
+    }
+  }, [errorMessage]);
+
+  // Gestion du changement avec validation
+  const handleChange = useCallback((e) => {
+    // Réinitialiser les erreurs
+    setCurrentError(null);
+    e.target.setCustomValidity("");
+
+    // Retirer le style placeholder si une valeur est sélectionnée
+    if (e.target.classList.contains("!text-gray-400")) {
+      e.target.classList.remove("!text-gray-400");
+    }
+
+    // Appel du callback parent
+    if (onChange) {
+      try {
+        onChange(e);
+      } catch (error) {
+        console.error('Error in FormSelect onChange callback:', error);
+        setCurrentError("Erreur lors de la sélection");
+      }
+    }
+  }, [onChange]);
+
+  // Classes CSS avec gestion d'erreur
+  const selectClasses = useMemo(() => {
+    let classes = `input peer !pr-16 ${getInputStyle(variant, title != null)}`;
+    if (placeholder !== "" && !defaultValue && !hasSelection) {
+      classes += " !text-gray-400";
+    }
+    if (currentError) {
+      classes += " !ring-error-color";
+    }
+    return `${classes} ${className}`;
+  }, [variant, title, placeholder, defaultValue, hasSelection, currentError, className]);
+
+  // Message d'aide/erreur à afficher
+  const helperMessage = useMemo(() => {
+    if (currentError || errorMessage) return currentError || errorMessage;
+    return supportingText;
+  }, [currentError, errorMessage, supportingText]);
+
+  // Détermine si on affiche un message d'erreur
+  const hasError = Boolean(currentError || errorMessage);
 
   return (
     <Column className={`relative group ${getGroupStyle(variant, disabled)}`}>
       {title && (
         <label
           className={
-            `absolute pointer-events-none transition-colors text-xs truncate ${getTitleStyle(variant)}` +
-            (isFocus ? " text-primary-color font-medium" : " text-text-light")
+            `absolute pointer-events-none transition-colors text-xs truncate ${getTitleStyle(variant)} ` +
+            (isFocus ? "text-primary-color font-medium" : "text-text-light") +
+            (required ? " after:content-['*'] after:text-red-500 after:ml-1" : "")
           }
-          htmlFor={id}
+          htmlFor={selectId}
         >
           {title}
         </label>
       )}
+      
       {!loading && (
         <select
-          id={id}
           {...props}
+          ref={selectRef}
+          id={selectId}
           title={disabled && messageDisabled ? messageDisabled : title}
           multiple={isMulti}
           required={required}
           disabled={disabled}
-          onFocus={(e) => setFocus(true)}
-          onBlur={(e) => setFocus(false)}
-          className={
-            `input peer !pr-16 ${getInputStyle(variant, title != null)} ` + (placeholder !== "" && !defaultValue ? "!text-gray-400" : "") + " " + className
-          }
-          onInvalid={(e) => {
-            if (errorMessage) e.target.setCustomValidity(errorMessage);
-          }}
+          onFocus={handleFocus}
+          onBlur={handleBlur}
+          className={selectClasses}
+          onInvalid={handleInvalid}
           type={type}
-          onChange={(e) => {
-            if (e.target.classList.contains("!text-gray-400")) e.target.classList.remove("!text-gray-400");
-            if (onChange) onChange(e);
-          }}
+          onChange={handleChange}
           value={value}
           defaultValue={defaultValue}
+          aria-describedby={helperMessage ? helperId : undefined}
+          aria-invalid={hasError}
+          name={props.name}
         >
           {placeholder && (
-            <option value={undefined} disabled selected hidden>
+            <option value="" disabled hidden>
               {placeholder}
             </option>
           )}
-          {allowEmpty && <option value={undefined} />}
-          {options?.map((option, k) => (
-            <option key={"option_" + k} value={option.value} className={"text-text-color " + (option["bg-color"] ? option["bg-color"] : "")}>
+          {allowEmpty && <option value="">-- Aucun --</option>}
+          {validOptions.map((option, k) => (
+            <option 
+              key={option.key || `option_${k}`} 
+              value={option.value} 
+              disabled={option.disabled}
+              className={`text-text-color ${option["bg-color"] || ""}`}
+            >
               {option.label}
             </option>
           ))}
         </select>
       )}
+      
       {loading && (
-        <div className="w-36 h-12 mt-0.5 border-b border-gray-300">
-          <Spinner className="h-5 w-5 absolute right-2 bottom-2 " />
+        <div className="w-36 h-12 mt-0.5 border-b border-gray-300" role="status" aria-label="Chargement des options">
+          <Spinner className="h-5 w-5 absolute right-2 bottom-2" />
         </div>
       )}
+      
+      {/* Icône d'erreur */}
       {!isFocus && (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className="pointer-events-none text-sm opacity-0 peer-invalid:opacity-100 absolute bottom-2 right-8 text-error-color w-5 h-5"
+          className={`pointer-events-none text-sm absolute bottom-2 right-8 text-error-color w-5 h-5 transition-opacity ${
+            hasError ? "opacity-100" : "opacity-0 peer-invalid:opacity-100"
+          }`}
+          aria-hidden="true"
         >
           <path
             fillRule="evenodd"
@@ -99,12 +199,17 @@ export default function FormSelect({
           />
         </svg>
       )}
+      
+      {/* Icône de dropdown */}
       {!loading && (
         <svg
           xmlns="http://www.w3.org/2000/svg"
           viewBox="0 0 20 20"
           fill="currentColor"
-          className={"w-5 h-5 absolute right-2 pointer-events-none " + (title ? "bottom-2.5" : "bottom-3")}
+          className={`w-5 h-5 absolute right-2 pointer-events-none transition-colors ${
+            title ? "bottom-2.5" : "bottom-3"
+          } ${disabled ? "text-gray-400" : "text-gray-600"}`}
+          aria-hidden="true"
         >
           <path
             fillRule="evenodd"
@@ -113,7 +218,27 @@ export default function FormSelect({
           />
         </svg>
       )}
-      {supportingText && <small className="text-text-light italic absolute left-1 -bottom-5">{supportingText}</small>}
+      
+      {/* Message d'aide/erreur */}
+      {helperMessage && (
+        <small 
+          id={helperId}
+          className={`absolute left-1 -bottom-5 text-xs ${
+            hasError 
+              ? "text-red-600 flex items-center" 
+              : "text-text-light italic"
+          }`}
+          role={hasError ? "alert" : undefined}
+          aria-live={hasError ? "polite" : undefined}
+        >
+          {hasError && (
+            <svg className="w-3 h-3 mr-1 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20" aria-hidden="true">
+              <path fillRule="evenodd" d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-7 4a1 1 0 11-2 0 1 1 0 012 0zm-1-9a1 1 0 00-1 1v4a1 1 0 102 0V6a1 1 0 00-1-1z" clipRule="evenodd" />
+            </svg>
+          )}
+          {helperMessage}
+        </small>
+      )}
     </Column>
   );
 }
